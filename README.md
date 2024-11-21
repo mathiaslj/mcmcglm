@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# gibbsR
+# mcmcglm
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of gibbsR is to create a package with functionalities related
+The goal of mcmcglm is to create a package with functionalities related
 to Gibbs sampling.
 
 Specifically, want to create a function that can perform the CGGibbs
@@ -21,7 +21,7 @@ unstable.
 <!-- ## Example -->
 <!-- This is a basic example which shows you how to solve a common problem: -->
 <!-- ```{r example} -->
-<!-- library(gibbsR) -->
+<!-- library(mcmcglm) -->
 <!-- ## basic example code -->
 <!-- ``` -->
 <!-- What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so: -->
