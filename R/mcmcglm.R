@@ -12,21 +12,31 @@ library(R6)
 
 mcmcglm <- R6Class("mcmcglm",
                    public = list(
-                     initialize = function(beta_prior, X, Y, family = gaussian(),
+                     initialize = function(formula,
+                                           family = gaussian,
+                                           data,
+                                           beta_prior,
                                            known_Y_sigma = 1,
                                            n_iterations = 100,
                                            burnin = 10,
                                            sample_fun = NULL) {
 
+                       browser()
                        if (burnin >= n_iterations) stop("Need more iterations than burnin")
                        self$n_iterations <- n_iterations
                        self$burnin <- burnin
 
-                       self$X <- as.matrix(X)
-                       self$Y <- Y
-                       self$known_Y_sigma <- known_Y_sigma
+                       self$family <- check_family(family = family)
+                       if (missing(data)) {
+                         data <- environment(formula)
+                       }
+
+                       data_list <- extract_model_data(formula, data)
+                       self$X <- data_list$X
+                       self$Y <- data_list$Y
                        private$nvars <- ncol(X)
                        private$nobs <- NROW(Y)
+                       self$known_Y_sigma <- known_Y_sigma
 
                        self$beta_list <- rep(vector("list", 1), n_iterations - burnin)
                        self$beta_prior <- beta_prior
@@ -147,13 +157,20 @@ mcmcglm <- R6Class("mcmcglm",
                      }
                    ))
 
+chain <- mcmcglm$new(formula = A ~ .,
+                     data = test_dat,
+                     beta_prior = distributional::dist_normal(0, 1),
+                     family = binomial(link = "logit"),
+                     n_iterations = 10,
+                     burnin = 0)
+
 # hist_of_beta <- function(w, i) {
-#   chain <- mcmcglm$new(beta_prior = distributional::dist_normal(0, 1),
-#                        X = cbind(int = rep(1, nrow(test_dat)), test_dat[, c("B1", "B2")]),
-#                        Y = test_dat[, "A"],
-#                        family = binomial(link = "logit"),
-#                        n_iterations = 1e4,
-#                        burnin = 1e2)
+  # chain <- mcmcglm$new(beta_prior = distributional::dist_normal(0, 1),
+  #                      X = cbind(int = rep(1, nrow(test_dat)), test_dat[, c("B1", "B2")]),
+  #                      Y = test_dat[, "A"],
+  #                      family = binomial(link = "logit"),
+  #                      n_iterations = 1e4,
+  #                      burnin = 1e2)
 #
 #   chain$run(w = w)
 #
@@ -165,126 +182,3 @@ mcmcglm <- R6Class("mcmcglm",
 # hist_of_beta(0.6, 1)
 #
 # glm(A~., data = test_dat, family = binomial(link = "logit"))
-
-check_family <- function(family) {
-  if (is.character(family)) {
-    family <- get(family, mode = "function", envir = parent.frame())
-  }
-  if (is.function(family)) {
-    family <- family()
-  }
-  if (is.null(family$family)) {
-    print(family)
-    stop("'family' not recognized")
-  }
-
-  return(family)
-}
-
-extract_data_from_call <- function(call) {
-  m <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
-             names(call),
-             0L)
-  call <- call[c(1L, m)]
-  call$drop.unused.levels <- TRUE
-  call[[1L]] <- quote(stats::model.frame)
-  mf <- eval(call, parent.frame())
-  mt <- attr(mf, "terms")
-
-  Y <- model.response(mf, "any")
-  if (length(dim(Y)) == 1L) {
-    nm <- rownames(Y)
-    dim(Y) <- NULL
-    if (!is.null(nm))
-      names(Y) <- nm
-  }
-  X <- if (!is.empty.model(mt))
-    as.matrix(model.matrix(mt, mf))
-  else matrix(, NROW(Y), 0L)
-
-  return(list(Y = Y, X = X))
-}
-
-cggibbs2 <- function(formula,
-                     family = gaussian,
-                     data,
-                     prior = distributional::dist_normal(mean = 2, sd = 2),
-                     known_sigma = 1,
-                     n_iterations = 10) {
-  call <- match.call()
-
-  family <- check_family(family = family)
-  if (missing(data)) {
-    data <- environment(formula)
-  }
-
-  mf <- match.call(expand.dots = FALSE)
-  data_list <- extract_data_from_call(mf)
-
-  X <- data_list$X
-  Y <- data_list$Y
-
-  nvars <- ncol(X)
-  nobs <- NROW(Y)
-
-  hold_val <- list(beta = NULL,
-                   eta = NULL,
-                   ll_val = NULL,
-                   prior_density_val = NULL,
-                   lp_val = NULL)
-  chain <- rep(list(hold_val), n_iterations)
-
-  chain[[1]]$beta <- distributional::generate(prior, nvars)[[1]]
-  chain[[1]]$eta <- X %*% chain[[1]]$beta
-
-  calc_ll <- function(eta, Y, X, family_name) {
-    mu <- family$linkinv(eta)
-
-    if (family$family == "gaussian") {
-      log_density <- dnorm(Y, mean = mu, sd = known_sigma, log = T)
-    }
-    if (family$family == "binomial") {
-      log_density <- dbinom(Y, size = 1, prob = mu, log = T)
-    }
-
-    ll_val <- sum(log_density)
-    return(ll_val)
-  }
-
-  chain[[1]]$ll_val <- calc_ll(eta = chain[[1]]$eta,
-                               Y = Y,
-                               X = X,
-                               family_name = family$family)
-
-  chain[[1]]$prior_density_val <- sum(density(prior, chain[[1]]$beta, log = T)[[1]])
-
-  chain[[1]]$lp_val <- sum(ll_val, prior_val)
-
-  browser()
-
-  update_eta <- function(new_beta_i, current_beta_i, current_eta) {
-    diff_beta <- new_beta_i - current_beta_i
-
-    return(current_eta + X[, 1] * diff_beta)
-  }
-
-  calc_ll_i <- function(beta_i) {
-    new_eta <- update_eta(beta_i, current_beta_i = beta[1], current_eta = eta)
-
-    calc_ll(eta = new_eta,
-            Y = Y,
-            X = X,
-            family_name = family$family)
-  }
-
-  qslice::slice_stepping_out(beta[[1]], log_target = calc_ll_i, w = 0.7)
-
-
-
-  update_eta <- function() {
-
-  }
-
-}
-
-# cggibbs2(A ~ B1 + B2, family = binomial(link = "logit"), data = test_dat)
