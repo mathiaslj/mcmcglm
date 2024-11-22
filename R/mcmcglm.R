@@ -21,7 +21,6 @@ mcmcglm <- R6Class("mcmcglm",
                                            burnin = 10,
                                            sample_fun = NULL) {
 
-                       browser()
                        if (burnin >= n_iterations) stop("Need more iterations than burnin")
                        self$n_iterations <- n_iterations
                        self$burnin <- burnin
@@ -34,16 +33,17 @@ mcmcglm <- R6Class("mcmcglm",
                        data_list <- extract_model_data(formula, data)
                        self$X <- data_list$X
                        self$Y <- data_list$Y
-                       private$nvars <- ncol(X)
-                       private$nobs <- NROW(Y)
+                       private$nvars <- ncol(self$X)
+                       private$nobs <- NROW(self$Y)
                        self$known_Y_sigma <- known_Y_sigma
 
                        self$beta_list <- rep(vector("list", 1), n_iterations - burnin)
                        self$beta_prior <- beta_prior
-                       self$beta <- distributional::generate(beta_prior, private$nvars)[[1]]
-                       self$family <- family
+                       init_beta <- distributional::generate(beta_prior, private$nvars)[[1]]
+                       self$beta <- init_beta
 
-                       self$eta <- drop(self$X %*% self$beta)
+                       init_eta <- drop(self$X %*% self$beta)
+                       self$eta <- init_eta
 
                        if (is.null(sample_fun))
                          self$sample_fun <- qslice::slice_stepping_out
@@ -67,49 +67,47 @@ mcmcglm <- R6Class("mcmcglm",
                      iteration_index = NULL,
 
                      generate_log_potential = function(new_beta_i) {
-                       new_eta <- private$new_eta(new_beta_i)
+                       new_eta <- private$update_eta(new_beta_i)
                        new_mu <- self$family$linkinv(new_eta)
-                       ll <- private$calc_ll(new_mu, self$Y, self$X, self$family)
+                       ll <- calc_ll(main_parameter = new_mu, Y = self$Y, family_name = self$family$family,
+                                     extra_args = list(sd = self$known_Y_sigma))
 
                        new_beta <- self$beta
                        new_beta[self$parameter_index] <- new_beta_i
-                       prior_density <- private$calc_prior_density(self$beta_prior, new_beta)
+                       prior_density <- calc_prior_density(prior_distribution = self$beta_prior,
+                                                           x = self$beta)
 
                        log_potential <- ll + prior_density
 
                        return(log_potential)
                      },
 
-                     sample_coord = function(sample_fun = self$sample_fun, ...) {
+                     sample_coord = function(sample_fun = self$sample_fun) {
                        current_beta <- self$beta[self$parameter_index]
-                       slice_sample <- sample_fun(current_beta, self$generate_log_potential, ...)
+                       slice_sample <- sample_fun(current_beta, self$generate_log_potential, w = 0.5)
 
                        self$beta[self$parameter_index] <- slice_sample$x
-                       self$update_indices()
 
                        return(invisible(self))
                      },
 
-                     update_indices = function() {
-                       if (self$parameter_index < private$nvars) {
-                         self$parameter_index <- self$parameter_index + 1
-                         return(invisible(self))
-                       }
-                       self$iteration_index <- self$iteration_index + 1
-                       self$parameter_index <- 1
-
-                       if (self$iteration_index %% 1000 == 0)
-                         cat(self$iteration_index," iterations done\n")
-
-                       if (self$iteration_index > self$burnin) {
-                         sample_index <- self$iteration_index - self$burnin
-                         self$beta_list[[sample_index]] <- self$beta
-                       }
-                     },
-
                      run = function(...) {
-                       while(self$iteration_index <= self$n_iterations) {
-                         self$sample_coord(self$sample_fun, ...)
+
+                       for (i in 1:self$burnin) {
+                         self$iteration_index <- i
+                         for (j in 1:private$nvars) {
+                           self$parameter_index <- j
+                           self$sample_coord(self$sample_fun, ...)
+                         }
+                       }
+
+                       for (i in (self$burnin+1):(self$burnin+self$n_iterations)) {
+                         self$iteration_index <- i
+                         for (j in 1:private$nvars) {
+                           self$parameter_index <- j
+                           self$sample_coord(self$sample_fun, ...)
+                         }
+                         self$beta_list[[i]] <- self$beta
                        }
                      }
                    ),
@@ -122,9 +120,11 @@ mcmcglm <- R6Class("mcmcglm",
                        self$eta <- self$family$linkfun(value)
                      },
                      ll_val = function()
-                       return(private$calc_ll(self$mu, self$Y, self$X, self$family)),
+                       return(calc_ll(main_parameter = self$mu, Y = self$Y, family_name = self$family$family,
+                                      extra_args = list(sd = self$known_Y_sigma))),
                      prior_density_val = function()
-                       return(private$calc_prior_density(self$beta_prior, self$beta)),
+                       return(calc_prior_density(prior_distribution = self$beta_prior,
+                                                 x = self$beta)),
                      log_potential = function()
                        return(sum(self$ll_val, self$prior_density_val))
                    ),
@@ -133,44 +133,31 @@ mcmcglm <- R6Class("mcmcglm",
                      nvars = NULL,
                      nobs = NULL,
 
-                     calc_ll = function(mu, Y, X, family) {
-                       if (family$family == "gaussian") {
-                         log_density <- dnorm(Y, mean = mu, sd = self$known_Y_sigma, log = T)
-                       }
-                       if (family$family == "binomial") {
-                         log_density <- dbinom(Y, size = 1, prob = mu, log = T)
-                       }
-
-                       ll_val <- sum(log_density)
-                       return(ll_val)
-                     },
                      calc_prior_density = function(beta_prior, beta) {
                        sum(density(beta_prior, beta, log = T)[[1]])
                      },
 
-                     new_eta = function(new_beta_i) {
-                       diff_beta <- new_beta_i - self$beta[self$parameter_index]
-
-                       eta <- self$eta + self$X[, self$parameter_index] * diff_beta
-
-                       return(eta)
+                     update_eta = function(new_beta_i) {
+                       update_linear_predictor(new_beta_i, old_beta_i = self$beta[self$parameter_index],
+                                               old_eta = self$eta, X = self$X)
                      }
-                   ))
+                   )
+)
 
 chain <- mcmcglm$new(formula = A ~ .,
                      data = test_dat,
-                     beta_prior = distributional::dist_normal(0, 1),
+                     beta_prior = distributional::dist_gamma(1, 2),
                      family = binomial(link = "logit"),
                      n_iterations = 10,
                      burnin = 0)
 
 # hist_of_beta <- function(w, i) {
-  # chain <- mcmcglm$new(beta_prior = distributional::dist_normal(0, 1),
-  #                      X = cbind(int = rep(1, nrow(test_dat)), test_dat[, c("B1", "B2")]),
-  #                      Y = test_dat[, "A"],
-  #                      family = binomial(link = "logit"),
-  #                      n_iterations = 1e4,
-  #                      burnin = 1e2)
+# chain <- mcmcglm$new(beta_prior = distributional::dist_normal(0, 1),
+#                      X = cbind(int = rep(1, nrow(test_dat)), test_dat[, c("B1", "B2")]),
+#                      Y = test_dat[, "A"],
+#                      family = binomial(link = "logit"),
+#                      n_iterations = 1e4,
+#                      burnin = 1e2)
 #
 #   chain$run(w = w)
 #
