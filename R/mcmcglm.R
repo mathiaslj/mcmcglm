@@ -66,25 +66,9 @@ mcmcglm <- R6Class("mcmcglm",
                      parameter_index = NULL,
                      iteration_index = NULL,
 
-                     generate_log_potential = function(new_beta_i) {
-                       new_eta <- private$update_eta(new_beta_i)
-                       new_mu <- self$family$linkinv(new_eta)
-                       ll <- calc_ll(main_parameter = new_mu, Y = self$Y, family_name = self$family$family,
-                                     extra_args = list(sd = self$known_Y_sigma))
-
-                       new_beta <- self$beta
-                       new_beta[self$parameter_index] <- new_beta_i
-                       prior_density <- calc_prior_density(prior_distribution = self$beta_prior,
-                                                           x = self$beta)
-
-                       log_potential <- ll + prior_density
-
-                       return(log_potential)
-                     },
-
                      sample_coord = function(sample_fun = self$sample_fun) {
                        current_beta <- self$beta[self$parameter_index]
-                       slice_sample <- sample_fun(current_beta, self$generate_log_potential, w = 0.5)
+                       slice_sample <- sample_fun(current_beta, private$generate_log_potential, w = 0.5)
 
                        self$beta[self$parameter_index] <- slice_sample$x
 
@@ -140,6 +124,13 @@ mcmcglm <- R6Class("mcmcglm",
                      update_eta = function(new_beta_i) {
                        update_linear_predictor(new_beta_i, old_beta_i = self$beta[self$parameter_index],
                                                old_eta = self$eta, X = self$X)
+                     },
+
+                     generate_log_potential = function(new_beta_i) {
+                       new_eta <- private$update_eta(new_beta_i)
+
+                       generate_log_potential(new_eta, Y = self$Y, family = self$family,
+                                              beta = self$beta, beta_prior = self$beta_prior)
                      }
                    )
 )

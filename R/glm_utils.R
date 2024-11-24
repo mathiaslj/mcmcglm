@@ -1,8 +1,9 @@
-#' Calculate log likelihood from
+#' Calculate log likelihood parametrised by "main_parameter"
 #'
 #' @param main_parameter
 #' @param Y
 #' @param family_name
+#' @param extra_args
 #'
 #' @return
 #' @export
@@ -27,9 +28,9 @@ calc_prior_density = function(prior_distribution, x) {
 generate_log_potential = function(eta, Y, family,
                                   beta, beta_prior) {
   mu <- family$linkinv(eta)
-  ll <- calc_ll(mu = mu, Y = Y, family_name = family$family)
+  ll <- calc_ll(main_parameter = mu, Y = Y, family_name = family$family)
 
-  prior_density_val <- calc_prior_density(self$beta_prior, beta)
+  prior_density_val <- calc_prior_density(beta_prior, beta)
 
   log_potential <- ll + prior_density_val
 
