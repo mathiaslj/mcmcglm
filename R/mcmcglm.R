@@ -68,7 +68,7 @@ mcmcglm <- R6Class("mcmcglm",
 
                      sample_coord = function(sample_fun = self$sample_fun) {
                        current_beta <- self$beta[self$parameter_index]
-                       slice_sample <- sample_fun(current_beta, private$generate_log_potential, w = 0.5)
+                       slice_sample <- sample_fun(current_beta, private$log_potential, w = 0.5)
 
                        self$beta[self$parameter_index] <- slice_sample$x
 
@@ -104,10 +104,10 @@ mcmcglm <- R6Class("mcmcglm",
                        self$eta <- self$family$linkfun(value)
                      },
                      ll_val = function()
-                       return(calc_ll(main_parameter = self$mu, Y = self$Y, family_name = self$family$family,
+                       return(log_likelihood(main_parameter = self$mu, Y = self$Y, family_name = self$family$family,
                                       extra_args = list(sd = self$known_Y_sigma))),
                      prior_density_val = function()
-                       return(calc_prior_density(prior_distribution = self$beta_prior,
+                       return(log_prior_density_val(prior_distribution = self$beta_prior,
                                                  x = self$beta)),
                      log_potential = function()
                        return(sum(self$ll_val, self$prior_density_val))
@@ -117,19 +117,15 @@ mcmcglm <- R6Class("mcmcglm",
                      nvars = NULL,
                      nobs = NULL,
 
-                     calc_prior_density = function(beta_prior, beta) {
-                       sum(density(beta_prior, beta, log = T)[[1]])
-                     },
-
                      update_eta = function(new_beta_i) {
                        update_linear_predictor(new_beta_i, old_beta_i = self$beta[self$parameter_index],
                                                old_eta = self$eta, X = self$X)
                      },
 
-                     generate_log_potential = function(new_beta_i) {
+                     log_potential = function(new_beta_i) {
                        new_eta <- private$update_eta(new_beta_i)
 
-                       generate_log_potential(new_eta, Y = self$Y, family = self$family,
+                       log_potential(new_eta, Y = self$Y, family = self$family,
                                               beta = self$beta, beta_prior = self$beta_prior)
                      }
                    )
