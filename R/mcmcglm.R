@@ -33,13 +33,13 @@ mcmcglm <- R6Class("mcmcglm",
                        data_list <- extract_model_data(formula, data)
                        self$X <- data_list$X
                        self$Y <- data_list$Y
-                       private$nvars <- ncol(self$X)
-                       private$nobs <- NROW(self$Y)
+                       self$nvars <- ncol(self$X)
+                       self$nobs <- NROW(self$Y)
                        self$known_Y_sigma <- known_Y_sigma
 
                        self$beta_list <- rep(vector("list", 1), n_iterations - burnin)
                        self$beta_prior <- beta_prior
-                       init_beta <- distributional::generate(beta_prior, private$nvars)[[1]]
+                       init_beta <- distributional::generate(beta_prior, self$nvars)[[1]]
                        self$beta <- init_beta
 
                        init_eta <- drop(self$X %*% self$beta)
@@ -56,6 +56,8 @@ mcmcglm <- R6Class("mcmcglm",
                      burnin = NULL,
                      X = NULL,
                      Y = NULL,
+                     nvars = NULL,
+                     nobs = NULL,
                      known_Y_sigma = NULL,
                      family = NULL,
                      beta_list = NULL,
@@ -79,20 +81,32 @@ mcmcglm <- R6Class("mcmcglm",
 
                        for (i in 1:self$burnin) {
                          self$iteration_index <- i
-                         for (j in 1:private$nvars) {
+                         for (j in 1:self$nvars) {
                            self$parameter_index <- j
                            self$sample_coord(self$sample_fun, ...)
                          }
                        }
 
+                       cat("Burnin complete...\nSampling from stationary distribution\n")
+
                        for (i in (self$burnin+1):(self$burnin+self$n_iterations)) {
+                         if (i %% 1e3 == 0) cat("Iteration ", i, " done\n")
                          self$iteration_index <- i
-                         for (j in 1:private$nvars) {
+                         for (j in 1:self$nvars) {
                            self$parameter_index <- j
                            self$sample_coord(self$sample_fun, ...)
                          }
                          self$beta_list[[i]] <- self$beta
                        }
+                     },
+                     posterior_sample = function(parameter_index) {
+                       if (!parameter_index %in% 1:self$nvars)
+                         stop("Input 'parameter_index' needs to be within range 1-", self$nvars, "\n")
+
+                       beta_i_vec <- sapply(self$beta_list, function(x) x[[parameter_index]]) %>%
+                         unlist()
+                       attr(beta_i_vec, "X_col") <- colnames(self$X)[parameter_index]
+                       return(beta_i_vec)
                      }
                    ),
 
@@ -105,18 +119,16 @@ mcmcglm <- R6Class("mcmcglm",
                      },
                      ll_val = function()
                        return(log_likelihood(main_parameter = self$mu, Y = self$Y, family_name = self$family$family,
-                                      extra_args = list(sd = self$known_Y_sigma))),
+                                             extra_args = list(sd = self$known_Y_sigma))),
                      prior_density_val = function()
                        return(log_prior_density_val(prior_distribution = self$beta_prior,
-                                                 x = self$beta)),
-                     log_potential = function()
-                       return(sum(self$ll_val, self$prior_density_val))
+                                                    x = self$beta)),
+                     log_potential_val = function()
+                       return(log_potential(self$eta, Y = self$Y, family = self$family,
+                                            beta = self$beta, beta_prior = self$beta_prior))
                    ),
 
                    private = list(
-                     nvars = NULL,
-                     nobs = NULL,
-
                      update_eta = function(new_beta_i) {
                        update_linear_predictor(new_beta_i, old_beta_i = self$beta[self$parameter_index],
                                                old_eta = self$eta, X = self$X)
@@ -126,17 +138,52 @@ mcmcglm <- R6Class("mcmcglm",
                        new_eta <- private$update_eta(new_beta_i)
 
                        log_potential(new_eta, Y = self$Y, family = self$family,
-                                              beta = self$beta, beta_prior = self$beta_prior)
+                                     beta = self$beta, beta_prior = self$beta_prior)
                      }
                    )
 )
 
-chain <- mcmcglm$new(formula = A ~ .,
-                     data = test_dat,
-                     beta_prior = distributional::dist_gamma(1, 2),
-                     family = binomial(link = "logit"),
-                     n_iterations = 10,
-                     burnin = 0)
+run_mcmcglm <- function(formula,
+                        family = gaussian,
+                        data,
+                        beta_prior,
+                        known_Y_sigma = 1,
+                        n_iterations = 100,
+                        burnin = 10,
+                        sample_fun = NULL) {
+
+  args_as_list <- as.list(environment())
+  chain <- do.call(mcmcglm$new, args_as_list)
+  chain$run()
+  return(chain)
+}
+
+# chain <- run_mcmcglm(formula = A ~ .,
+#                      data = test_dat,
+#                      beta_prior = distributional::dist_gamma(1, 2),
+#                      family = binomial(link = "logit"),
+#                      n_iterations = 1e4,
+#                      burnin = 1e2)
+
+plot <- function(mcmcglm) {
+
+  betas_as_list <- lapply(1:mcmcglm$nvars, function(i) {
+    beta_i_sample <- mcmcglm$posterior_sample(i)
+    as.data.frame(beta_i_sample) %>%
+      dplyr::mutate(var = attr(beta_i_sample, "X_col"))
+    }
+    )
+
+  sample_data <- dplyr::bind_rows(betas_as_list)
+
+  ggplot(sample_data, aes(x = beta_i_sample, fill = var)) +
+    geom_histogram(binwidth = 0.5) +
+    facet_wrap("var") +
+    theme_bw() +
+    labs(x = "Value of posterior sample of parameter",
+         y = "Count",
+         title = "Histograms showing empirical distributions of parameters")
+}
 
 # hist_of_beta <- function(w, i) {
 # chain <- mcmcglm$new(beta_prior = distributional::dist_normal(0, 1),
