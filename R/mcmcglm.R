@@ -19,7 +19,7 @@ mcmcglm <- R6Class("mcmcglm",
                                            known_Y_sigma = 1,
                                            n_iterations = 100,
                                            burnin = 10,
-                                           sample_fun = NULL) {
+                                           sample_method = NULL) {
 
                        if (burnin >= n_iterations) stop("Need more iterations than burnin")
                        self$n_iterations <- n_iterations
@@ -45,8 +45,8 @@ mcmcglm <- R6Class("mcmcglm",
                        init_eta <- drop(self$X %*% self$beta)
                        self$eta <- init_eta
 
-                       if (is.null(sample_fun))
-                         self$sample_fun <- qslice::slice_stepping_out
+                       if (is.null(sample_method)) stop("Specify a sample_method")
+                       self$sample_method <- sample_method
 
                        self$parameter_index <- 1
                        self$iteration_index <- 1
@@ -64,15 +64,32 @@ mcmcglm <- R6Class("mcmcglm",
                      beta_prior = NULL,
                      beta = NULL,
                      eta = NULL,
-                     sample_fun = NULL,
+                     sample_method = NULL,
                      parameter_index = NULL,
                      iteration_index = NULL,
 
-                     sample_coord = function(sample_fun = self$sample_fun) {
+                     sample_coord = function() {
                        current_beta <- self$beta[self$parameter_index]
-                       slice_sample <- sample_fun(current_beta, private$log_potential, w = 0.5)
 
-                       self$beta[self$parameter_index] <- slice_sample$x
+                       if (self$sample_method == "normal-normal") {
+                         sample_dist <- conditional_normal_beta_i(self$parameter_index,
+                                                             self$beta_prior,
+                                                             self$beta,
+                                                             self$Y,
+                                                             self$known_Y_sigma,
+                                                             self$X,
+                                                             self$family)
+
+                         sample <- distributional::generate(sample_dist, 1)[[1]]
+                       }
+
+                       if (self$sample_method == "slice_sampling") {
+                         sample <- qslice::slice_stepping_out(
+                           current_beta, private$log_potential, w = 0.5)$x
+                       }
+
+
+                       self$beta[self$parameter_index] <- sample
 
                        return(invisible(self))
                      },
@@ -83,7 +100,7 @@ mcmcglm <- R6Class("mcmcglm",
                          self$iteration_index <- i
                          for (j in 1:self$nvars) {
                            self$parameter_index <- j
-                           self$sample_coord(self$sample_fun, ...)
+                           self$sample_coord()
                          }
                        }
 
@@ -94,7 +111,7 @@ mcmcglm <- R6Class("mcmcglm",
                          self$iteration_index <- i
                          for (j in 1:self$nvars) {
                            self$parameter_index <- j
-                           self$sample_coord(self$sample_fun, ...)
+                           self$sample_coord()
                          }
                          self$beta_list[[i]] <- self$beta
                        }
@@ -150,7 +167,7 @@ run_mcmcglm <- function(formula,
                         known_Y_sigma = 1,
                         n_iterations = 100,
                         burnin = 10,
-                        sample_fun = NULL) {
+                        sample_method) {
 
   args_as_list <- as.list(environment())
   chain <- do.call(mcmcglm$new, args_as_list)
@@ -158,29 +175,22 @@ run_mcmcglm <- function(formula,
   return(chain)
 }
 
-# chain <- run_mcmcglm(formula = A ~ .,
-#                      data = test_dat,
-#                      beta_prior = distributional::dist_gamma(1, 2),
-#                      family = binomial(link = "logit"),
-#                      n_iterations = 1e4,
-#                      burnin = 1e2)
-
 plot <- function(mcmcglm) {
 
   betas_as_list <- lapply(1:mcmcglm$nvars, function(i) {
     beta_i_sample <- mcmcglm$posterior_sample(i)
     as.data.frame(beta_i_sample) %>%
       dplyr::mutate(var = attr(beta_i_sample, "X_col"))
-    }
-    )
+  }
+  )
 
   sample_data <- dplyr::bind_rows(betas_as_list)
 
-  ggplot(sample_data, aes(x = beta_i_sample, fill = var)) +
-    geom_histogram(binwidth = 0.5) +
-    facet_wrap("var") +
-    theme_bw() +
-    labs(x = "Value of posterior sample of parameter",
+  ggplot2::ggplot(sample_data, ggplot2::aes(x = beta_i_sample, fill = var)) +
+    ggplot2::geom_histogram(binwidth = 0.5) +
+    ggplot2::facet_wrap("var") +
+    ggplot2::theme_bw() +
+    ggplot2::labs(x = "Value of posterior sample of parameter",
          y = "Count",
          title = "Histograms showing empirical distributions of parameters")
 }
