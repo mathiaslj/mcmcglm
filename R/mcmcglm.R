@@ -1,13 +1,3 @@
-n <- 100
-x1 <- rnorm (n)
-x2 <- rbinom (n, 1, .5)
-b0 <- 1
-b1 <- 1.5
-b2 <- 2
-y <- rbinom (n, 1, arm::invlogit(b0+b1*x1+b2*x2))
-
-test_dat <- data.frame(A = y, B1 = x1, B2 = x2)
-
 library(R6)
 
 mcmcglm <- R6Class("mcmcglm",
@@ -96,8 +86,8 @@ mcmcglm <- R6Class("mcmcglm",
 
                      run = function(...) {
 
-                       for (i in 1:self$burnin) {
-                         self$iteration_index <- i
+                       for (k in 1:self$burnin) {
+                         self$iteration_index <- k
                          for (j in 1:self$nvars) {
                            self$parameter_index <- j
                            self$sample_coord()
@@ -106,24 +96,24 @@ mcmcglm <- R6Class("mcmcglm",
 
                        cat("Burnin complete...\nSampling from stationary distribution\n")
 
-                       for (i in (self$burnin+1):(self$burnin+self$n_iterations)) {
-                         if (i %% 1e3 == 0) cat("Iteration ", i, " done\n")
-                         self$iteration_index <- i
+                       for (k in (self$burnin+1):(self$burnin+self$n_iterations)) {
+                         if (k %% 1e3 == 0) cat("Iteration ", k, " done\n")
+                         self$iteration_index <- k
                          for (j in 1:self$nvars) {
                            self$parameter_index <- j
                            self$sample_coord()
                          }
-                         self$beta_list[[i]] <- self$beta
+                         self$beta_list[[k]] <- self$beta
                        }
                      },
                      posterior_sample = function(parameter_index) {
                        if (!parameter_index %in% 1:self$nvars)
                          stop("Input 'parameter_index' needs to be within range 1-", self$nvars, "\n")
 
-                       beta_i_vec <- sapply(self$beta_list, function(x) x[[parameter_index]]) %>%
+                       beta_j_vec <- sapply(self$beta_list, function(x) x[[parameter_index]]) %>%
                          unlist()
-                       attr(beta_i_vec, "X_col") <- colnames(self$X)[parameter_index]
-                       return(beta_i_vec)
+                       attr(beta_j_vec, "X_col") <- colnames(self$X)[parameter_index]
+                       return(beta_j_vec)
                      }
                    ),
 
@@ -146,15 +136,16 @@ mcmcglm <- R6Class("mcmcglm",
                    ),
 
                    private = list(
-                     update_eta = function(new_beta_i) {
-                       update_linear_predictor(new_beta_i, old_beta_i = self$beta[self$parameter_index],
-                                               old_eta = self$eta, X = self$X)
+                     update_eta = function(new_beta_j) {
+                       update_linear_predictor(new_beta_j, old_beta_j = self$beta[self$parameter_index],
+                                               old_eta = self$eta, X_j = self$X[, self$parameter_index])
                      },
 
-                     log_potential = function(new_beta_i) {
-                       new_eta <- private$update_eta(new_beta_i)
+                     log_potential = function(new_beta_j) {
+                       new_eta <- private$update_eta(new_beta_j)
+                       new_mu <- self$family$linkinv(new_eta)
 
-                       log_potential(new_eta, Y = self$Y, family = self$family,
+                       log_potential(new_mu, Y = self$Y, family = self$family,
                                      beta = self$beta, beta_prior = self$beta_prior)
                      }
                    )
@@ -177,16 +168,16 @@ run_mcmcglm <- function(formula,
 
 plot <- function(mcmcglm) {
 
-  betas_as_list <- lapply(1:mcmcglm$nvars, function(i) {
-    beta_i_sample <- mcmcglm$posterior_sample(i)
-    as.data.frame(beta_i_sample) %>%
-      dplyr::mutate(var = attr(beta_i_sample, "X_col"))
+  betas_as_list <- lapply(1:mcmcglm$nvars, function(k) {
+    beta_k_sample <- mcmcglm$posterior_sample(k)
+    as.data.frame(beta_k_sample) %>%
+      dplyr::mutate(var = attr(beta_k_sample, "X_col"))
   }
   )
 
   sample_data <- dplyr::bind_rows(betas_as_list)
 
-  ggplot2::ggplot(sample_data, ggplot2::aes(x = beta_i_sample, fill = var)) +
+  ggplot2::ggplot(sample_data, ggplot2::aes(x = beta_k_sample, fill = var)) +
     ggplot2::geom_histogram(binwidth = 0.5) +
     ggplot2::facet_wrap("var") +
     ggplot2::theme_bw() +

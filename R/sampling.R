@@ -8,8 +8,6 @@
 # }
 
 normal_normal_posterior <- function(beta_prior, beta, Y, sigma, X, family) {
-  mu <- family$linkinv(X %*% beta)
-
   cov_beta <- distributional::covariance(beta_prior)[[1]]
   if (is.null(nrow(cov_beta))) cov_beta <- cov_beta * diag(nrow = ncol(X))
 
