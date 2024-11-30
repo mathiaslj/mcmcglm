@@ -19,22 +19,22 @@ normal_normal_posterior <- function(beta_prior, beta, Y, sigma, X, family) {
   return(posterior_dist)
 }
 
-conditional_normal_beta_i <- function(i, beta_prior, beta, Y, sigma, X, family) {
+conditional_normal_beta_j <- function(j, beta_prior, beta, Y, sigma, X, family) {
   args <- as.list(environment())
   dist <- do.call(normal_normal_posterior, args[-1])
 
   mu <- mean(dist)
-  mu_i <- mu[i]
+  mu_j <- mu[j]
   cov <- distributional::covariance(dist)[[1]]
 
-  not_i <- setdiff(1:length(mu), i)
+  not_j <- setdiff(1:length(mu), j)
 
-  inv_cov_not_i <- solve(cov[not_i, not_i])
+  inv_cov_not_j <- solve(cov[not_j, not_j])
 
-  mu_i_post <- drop(mu_i + cov[i, not_i] %*% inv_cov_not_i %*% (beta[not_i] - mu[not_i]))
-  sigma_i_post <- drop(cov[i, i] - cov[i, not_i] %*% inv_cov_not_i %*% cov[not_i, i])
+  mu_j_post <- drop(mu_j + cov[j, not_j] %*% inv_cov_not_j %*% (beta[not_j] - mu[not_j]))
+  sigma_j_post <- drop(cov[j, j] - cov[j, not_j] %*% inv_cov_not_j %*% cov[not_j, j])
 
-  conditional_beta_i <- distributional::dist_normal(mean = mu_i_post, sd = sigma_i_post)
+  conditional_beta_j <- distributional::dist_normal(mean = mu_j_post, sd = sigma_j_post)
 }
 
 # a <- conditional_normal_beta_i(1,

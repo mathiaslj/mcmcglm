@@ -62,13 +62,13 @@ mcmcglm <- R6Class("mcmcglm",
                        current_beta <- self$beta[self$parameter_index]
 
                        if (self$sample_method == "normal-normal") {
-                         sample_dist <- conditional_normal_beta_i(self$parameter_index,
-                                                             self$beta_prior,
-                                                             self$beta,
-                                                             self$Y,
-                                                             self$known_Y_sigma,
-                                                             self$X,
-                                                             self$family)
+                         sample_dist <- conditional_normal_beta_j(self$parameter_index,
+                                                                  self$beta_prior,
+                                                                  self$beta,
+                                                                  self$Y,
+                                                                  self$known_Y_sigma,
+                                                                  self$X,
+                                                                  self$family)
 
                          sample <- distributional::generate(sample_dist, 1)[[1]]
                        }
@@ -166,7 +166,7 @@ run_mcmcglm <- function(formula,
   return(chain)
 }
 
-plot <- function(mcmcglm) {
+plot_mcmcglm <- function(mcmcglm) {
 
   betas_as_list <- lapply(1:mcmcglm$nvars, function(k) {
     beta_k_sample <- mcmcglm$posterior_sample(k)
@@ -182,8 +182,8 @@ plot <- function(mcmcglm) {
     ggplot2::facet_wrap("var") +
     ggplot2::theme_bw() +
     ggplot2::labs(x = "Value of posterior sample of parameter",
-         y = "Count",
-         title = "Histograms showing empirical distributions of parameters")
+                  y = "Count",
+                  title = "Histograms showing empirical distributions of parameters")
 }
 
 # hist_of_beta <- function(w, i) {
