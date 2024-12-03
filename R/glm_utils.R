@@ -1,3 +1,18 @@
+#' @export
+log_density <- function(family, main_parameter, Y, ...) {
+  UseMethod("log_density")
+}
+
+#' @export
+log_density.gaussian <- function(family, main_parameter, Y, ...) {
+  dnorm(Y, mean = main_parameter, ..., log = T)
+}
+
+#' @export
+log_density.binomial <- function(family, main_parameter, Y, ...) {
+  dbinom(Y, size = 1, prob = main_parameter, log = T)
+}
+
 #' Calculate log likelihood parametrised by "main_parameter"
 #'
 #' @param main_parameter `numeric vector` Value of the "main" parameter of the distribution specified by the `family_name` argument
@@ -12,24 +27,33 @@
 #' @export
 #'
 #' @examples
-log_likelihood = function(main_parameter, Y, family_name, extra_args) {
-  if (family_name == "gaussian") {
-    log_density <- dnorm(Y, mean = main_parameter, sd = extra_args$sd, log = T)
-  }
-  if (family_name == "binomial") {
-    log_density <- dbinom(Y, size = 1, prob = main_parameter, log = T)
-  }
+#'
+log_likelihood <- function(family, main_parameter, Y, ...) {
+  args <- as.list(environment(), list(...))
 
-  ll_val <- sum(log_density)
-  return(ll_val)
+  log_density <- do.call(log_density, args = args)
+
+  return(sum(log_density))
 }
+
+# log_likelihood = function(main_parameter, Y, family_name, extra_args) {
+#   if (family_name == "gaussian") {
+#     log_density <- dnorm(Y, mean = main_parameter, sd = extra_args$sd, log = T)
+#   }
+#   if (family_name == "binomial") {
+#     log_density <- dbinom(Y, size = 1, prob = main_parameter, log = T)
+#   }
+#
+#   ll_val <- sum(log_density)
+#   return(ll_val)
+# }
 
 log_prior_density_val = function(prior_distribution, x) {
   sum(unlist(density(prior_distribution, x, log = T)))
 }
 
-log_potential = function(mu, Y, family, beta, beta_prior, extra_args) {
-  ll <- log_likelihood(main_parameter = mu, Y = Y, family_name = family$family, extra_args = extra_args)
+log_potential = function(mu, Y, family, beta, beta_prior, ...) {
+  ll <- log_likelihood(family = family, main_parameter = mu, Y = Y, ...)
 
   prior_density_val <- log_prior_density_val(beta_prior, beta)
 
@@ -46,6 +70,7 @@ update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j)
   return(new_eta)
 }
 
+#' @noRd
 log_potential_from_betaj <- function(new_beta_j, j,
                                      current_beta,
                                      current_eta,

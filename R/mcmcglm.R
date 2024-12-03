@@ -109,7 +109,7 @@ mcmcglm <- function(formula,
                                                                      X = X, family = family,
                                                                      Y = Y,
                                                                      beta_prior = beta_prior,
-                                                                     extra_args = list(sd = known_Y_sigma)),
+                                                                     sd = known_Y_sigma),
           ...)$x
       }
 
