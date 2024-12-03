@@ -24,12 +24,12 @@ trace_plot <- function(x) {
 }
 
 #' @export
-trace_plot.mcmcglm <- function(x, iterations_drop = 10) {
-  data_removed_iterations <- samples(x) %>%
-    dplyr::filter(iteration > iterations_drop)
+trace_plot.mcmcglm <- function(x, samples_drop = 10) {
+  data_removed_samples <- samples(x) %>%
+    dplyr::filter(iteration > samples_drop)
 
   plot_data <- tidyr::pivot_longer(
-    data_removed_iterations,
+    data_removed_samples,
     cols = 1:ncol(x$model_matrix),
     names_to = "var_name",
     values_to = "beta_sample"
