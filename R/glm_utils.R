@@ -49,7 +49,7 @@ update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j)
 log_potential_from_betaj <- function(new_beta_j, j,
                                      current_beta,
                                      current_eta,
-                                     param_list, X, family, ...) {
+                                     X, family, ...) {
   current_beta_j <- current_beta[[j]]
 
   new_eta <- update_linear_predictor(new_beta_j,
