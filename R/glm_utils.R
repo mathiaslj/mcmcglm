@@ -46,20 +46,21 @@ update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j)
   return(new_eta)
 }
 
-log_potential_from_betaj <- function(new_beta_j, j, k, param_list, X, family, ...) {
-  current_beta_j <- param_list[[k-1]]$beta[[j]]
-  current_eta <- param_list[[k]]$eta
+log_potential_from_betaj <- function(new_beta_j, j,
+                                     current_beta,
+                                     current_eta,
+                                     param_list, X, family, ...) {
+  current_beta_j <- current_beta[[j]]
 
   new_eta <- update_linear_predictor(new_beta_j,
                                      current_beta_j = current_beta_j,
                                      current_eta = current_eta,
                                      X_j = X[, j])
 
-  new_beta <- param_list[[k]]$beta
+  new_beta <- current_beta
   new_beta[j] <- new_beta_j
 
   new_mu <- family$linkinv(new_eta)
-
 
   log_potential(new_mu, beta = new_beta, family = family, ...)
 }

@@ -67,9 +67,10 @@ mcmcglm_list <- function(formula,
 
       if (sample_method == "slice_sampling") {
         sample_beta_j_iteration_nextk <- qslice_fun(
-          x = param_list[[k-1]]$beta[[j]],
-          log_target = function(new_beta_j) log_potential_from_betaj(new_beta_j, j = j, k = k,
-                                                                     param_list = param_list,
+          x = param_list[[k]]$beta[[j]],
+          log_target = function(new_beta_j) log_potential_from_betaj(new_beta_j, j = j,
+                                                                     current_beta = param_list[[k]]$beta,
+                                                                     current_eta = param_list[[k]]$eta,
                                                                      X = X, family = family,
                                                                      Y = Y,
                                                                      beta_prior = beta_prior,
@@ -78,10 +79,10 @@ mcmcglm_list <- function(formula,
       }
 
       param_list[[k]]$beta[[j]] <- sample_beta_j_iteration_nextk
-      param_list[[k]]$eta <- update_linear_predictor(param_list[[k]]$beta[[j]],
-                                                       current_beta_j = param_list[[k-1]]$beta[[j]],
-                                                       current_eta = param_list[[k]]$eta,
-                                                       X_j = X[, j])
+      param_list[[k]]$eta <- update_linear_predictor(new_beta_j = param_list[[k]]$beta[[j]],
+                                                     current_beta_j = param_list[[k-1]]$beta[[j]],
+                                                     current_eta = param_list[[k]]$eta,
+                                                     X_j = X[, j])
       param_list[[k]]$mu <- family$linkinv(param_list[[k]]$eta)
 
       beta_data[k, j] <- sample_beta_j_iteration_nextk
