@@ -1,4 +1,4 @@
-check_family_add_class <- function(family) {
+check_family <- function(family) {
   if (is.character(family)) {
     family <- get(family, mode = "function", envir = parent.frame())
   }
@@ -10,9 +10,7 @@ check_family_add_class <- function(family) {
     stop("'family' not recognized")
   }
 
-  family_with_dist_as_class <- structure(family, class = c(family$family, class(family)))
-
-  return(family_with_dist_as_class)
+  return(family)
 }
 
 extract_model_data <- function(formula, data) {

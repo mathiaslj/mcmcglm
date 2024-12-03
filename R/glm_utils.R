@@ -1,6 +1,8 @@
 #' @export
 log_density <- function(family, main_parameter, Y, ...) {
-  UseMethod("log_density")
+  family_with_dist_as_class <- structure(family, class = c(family$family, class(family)))
+
+  UseMethod("log_density", object = family_with_dist_as_class)
 }
 
 #' @export
@@ -11,6 +13,11 @@ log_density.gaussian <- function(family, main_parameter, Y, ...) {
 #' @export
 log_density.binomial <- function(family, main_parameter, Y, ...) {
   dbinom(Y, size = 1, prob = main_parameter, log = T)
+}
+
+#' @export
+log_density.poisson <- function(family, main_parameter, Y, ...) {
+  dpois(Y, lambda = main_parameter, log = T)
 }
 
 #' Calculate log likelihood parametrised by "main_parameter"
@@ -29,29 +36,33 @@ log_density.binomial <- function(family, main_parameter, Y, ...) {
 #' @examples
 #'
 log_likelihood <- function(family, main_parameter, Y, ...) {
-  args <- as.list(environment(), list(...))
+  args <- c(as.list(environment()), list(...))
 
   log_density <- do.call(log_density, args = args)
 
   return(sum(log_density))
 }
 
-# log_likelihood = function(main_parameter, Y, family_name, extra_args) {
-#   if (family_name == "gaussian") {
-#     log_density <- dnorm(Y, mean = main_parameter, sd = extra_args$sd, log = T)
-#   }
-#   if (family_name == "binomial") {
-#     log_density <- dbinom(Y, size = 1, prob = main_parameter, log = T)
-#   }
-#
-#   ll_val <- sum(log_density)
-#   return(ll_val)
-# }
 
 log_prior_density_val = function(prior_distribution, x) {
   sum(unlist(density(prior_distribution, x, log = T)))
 }
 
+#' Title
+#'
+#' @param mu
+#' @param Y
+#' @param family
+#' @param beta
+#' @param beta_prior
+#' @param ... Arguments passed to [log_likelihood], which then passes it on to [log_density]. Fx.
+#' in the body of [mcmcglm], arguments such as `known_Y_sigma` is passed as known standard deviation
+#' during the evaluation of the gaussian density for the case `family = "gaussian"`.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 log_potential = function(mu, Y, family, beta, beta_prior, ...) {
   ll <- log_likelihood(family = family, main_parameter = mu, Y = Y, ...)
 

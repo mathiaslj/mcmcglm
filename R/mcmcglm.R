@@ -48,7 +48,7 @@ mcmcglm <- function(formula,
 
   if (burnin >= n_samples) stop("Need more iterations than burnin")
 
-  family <- check_family_add_class(family = family)
+  family <- check_family(family = family)
   if (missing(data)) {
     data <- environment(formula)
   }
@@ -74,6 +74,11 @@ mcmcglm <- function(formula,
 
   # Sample initial values and save
   init_beta <- distributional::generate(beta_prior, n_vars)[[1]]
+  is_multivate_dist <- inherits(init_beta, "matrix")
+  if (is_multivate_dist) {
+    init_beta <- as.numeric(init_beta[1, ])
+  }
+
   init_eta <- drop(X %*% init_beta)
   init_mu <- family$linkinv(init_eta)
 
