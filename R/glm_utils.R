@@ -2,8 +2,13 @@
 log_density <- function(family, main_parameter, Y, ...) {
   family_name_only_letters <- gsub("[^a-zA-Z]", "", family$family)
 
-  family_with_dist_as_class <- structure(family,
-                                         class = c(family_name_only_letters, class(family)))
+  family_with_dist_as_class <- structure(
+    family,
+    class = c(
+      family_name_only_letters,
+      class(family)
+    )
+  )
 
   UseMethod("log_density", object = family_with_dist_as_class)
 }
