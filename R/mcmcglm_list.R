@@ -53,26 +53,6 @@ mcmcglm_list <- function(formula,
   for (k in 2:(n_iterations+1)) {
     param_list[[k]] <- param_list[[k-1]]
     for (j in 1:n_vars) {
-      log_potential_from_betaj <- function(new_beta_j, j, k) {
-        current_beta_j <- param_list[[k-1]]$beta[[j]]
-        current_eta <- param_list[[k]]$eta
-
-        new_eta <- update_linear_predictor(new_beta_j,
-                                           current_beta_j = current_beta_j,
-                                           current_eta = current_eta,
-                                           X_j = X[, j])
-
-        new_beta <- param_list[[k]]$beta
-        new_beta[j] <- new_beta_j
-
-        new_mu <- family$linkinv(new_eta)
-
-
-        log_potential(new_mu, Y = Y, family = family, beta = new_beta,
-                      beta_prior = beta_prior,
-                      extra_args = list(sd = known_Y_sigma))
-      }
-
       if (sample_method == "normal-normal") {
         sample_dist <- conditional_normal_beta_j(j,
                                                  beta_prior,
@@ -88,7 +68,12 @@ mcmcglm_list <- function(formula,
       if (sample_method == "slice_sampling") {
         sample_beta_j_iteration_nextk <- qslice_fun(
           x = param_list[[k-1]]$beta[[j]],
-          log_target = function(new_beta_j) log_potential_from_betaj(new_beta_j, j = j, k = k),
+          log_target = function(new_beta_j) log_potential_from_betaj(new_beta_j, j = j, k = k,
+                                                                     param_list = param_list,
+                                                                     X = X, family = family,
+                                                                     Y = Y,
+                                                                     beta_prior = beta_prior,
+                                                                     extra_args = list(sd = known_Y_sigma)),
           ...)$x
       }
 
@@ -99,7 +84,6 @@ mcmcglm_list <- function(formula,
                                                        X_j = X[, j])
       param_list[[k]]$mu <- family$linkinv(param_list[[k]]$eta)
 
-      beta_res_list[[j]][k] <- sample_beta_j_iteration_nextk
       beta_data[k, j] <- sample_beta_j_iteration_nextk
     }
     cli::cli_progress_update()
