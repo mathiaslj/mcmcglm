@@ -25,7 +25,7 @@ log_likelihood = function(main_parameter, Y, family_name, extra_args) {
 }
 
 log_prior_density_val = function(prior_distribution, x) {
-  sum(density(prior_distribution, x, log = T)[[1]])
+  sum(unlist(density(prior_distribution, x, log = T)))
 }
 
 log_potential = function(mu, Y, family, beta, beta_prior, extra_args) {
@@ -38,10 +38,10 @@ log_potential = function(mu, Y, family, beta, beta_prior, extra_args) {
   return(log_potential)
 }
 
-update_linear_predictor = function(new_beta_j, old_beta_j, old_eta, X_j) {
-  diff_beta <- new_beta_j - old_beta_j
+update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j) {
+  diff_beta <- new_beta_j - current_beta_j
 
-  new_eta <- old_eta + X_j * diff_beta
+  new_eta <- as.numeric(current_eta + X_j * diff_beta)
 
   return(new_eta)
 }
