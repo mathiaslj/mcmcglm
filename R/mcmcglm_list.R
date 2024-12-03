@@ -28,11 +28,14 @@ mcmcglm_list <- function(formula,
   param_list <- rep(list(list(beta = NULL, eta = NULL, mu = NULL)), n_iterations + 1) %>%
     setNames(c("init", paste0("burnin", 1:burnin), paste0("iteration", 1:(n_iterations-burnin))))
 
-  # Creating beta_res_list with structure that we want to output to user. Easier to save results
+  # Creating beta_data with structure that we want to output to user. Easier to save results
   # as we go "in correct format" than re-arranging after
   template_betaj_vec <- vector("double", length = n_iterations + 1)
-  beta_res_list <- rep(list(template_betaj_vec), n_vars) %>%
-    setNames(colnames(X))
+
+  beta_data <- data.frame(rep(list(template_betaj_vec), n_vars)) %>%
+    setNames(colnames(X)) %>%
+    dplyr::mutate(iteration = dplyr::row_number() - 1) %>%
+    dplyr::mutate(burnin = ifelse(iteration <= burnin+1, TRUE, FALSE))
 
   # Sample initial values and save
   init_beta <- distributional::generate(beta_prior, n_vars)[[1]]
@@ -43,9 +46,7 @@ mcmcglm_list <- function(formula,
   param_list[[1]]$eta <- init_eta
   param_list[[1]]$mu <- init_mu
 
-  for (j in 1:n_vars) {
-    beta_res_list[[j]][1] <- init_beta[j]
-  }
+  beta_data[1, 1:n_vars] <- init_beta
 
   # Run the MCMC sampling
   cli::cli_progress_bar("Sampling from posterior", total = n_iterations)
@@ -99,14 +100,10 @@ mcmcglm_list <- function(formula,
       param_list[[k]]$mu <- family$linkinv(param_list[[k]]$eta)
 
       beta_res_list[[j]][k] <- sample_beta_j_iteration_nextk
+      beta_data[k, j] <- sample_beta_j_iteration_nextk
     }
     cli::cli_progress_update()
   }
-
-  beta_data <- as.data.frame(beta_res_list) %>%
-    setNames(colnames(X)) %>%
-    dplyr::mutate(iteration = dplyr::row_number() - 1) %>%
-    dplyr::mutate(burnin = ifelse(iteration <= burnin+1, TRUE, FALSE))
 
   out <- structure(beta_data, class = c("mcmcglm_list", class(beta_data)))
   return(out)
