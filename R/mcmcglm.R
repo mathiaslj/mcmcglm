@@ -17,7 +17,9 @@
 #' from `environment(formula)`, typically the environment from which the function is called.
 #' @param beta_prior a `distribution` object created by a function from the
 #' [`distributional`] package. Could fx. be `distributional::dist_normal(mean = 0, sd = 1)`.
-#' @param known_Y_sigma a `numeric` being the standard deviation of the response variable in the GLM
+#' @param log_likelihood_extra_args a named `list` with arguments passed onto the [log_density] function.
+#' Fx. specification of `log_likelihood_extra_args = list(sd = x)` is needed for the case of
+#' `family = "gaussian"`
 #' @param n_samples a `numeric` with number of samples to draw of each parameter(/variable) in the model
 #' @param burnin a `numeric` with the number of
 #' @param sample_method
@@ -37,7 +39,7 @@ mcmcglm <- function(formula,
                     family = gaussian,
                     data,
                     beta_prior,
-                    known_Y_sigma = 1,
+                    log_likelihood_extra_args = list(sd = 1),
                     n_samples = 100,
                     burnin = 10,
                     sample_method = NULL,
@@ -95,26 +97,36 @@ mcmcglm <- function(formula,
     for (j in 1:n_vars) {
       if (sample_method == "normal-normal") {
         sample_dist <- conditional_normal_beta_j(j,
-                                                 beta_prior,
-                                                 param_list[[k]]$beta,
-                                                 Y,
-                                                 known_Y_sigma,
-                                                 X,
-                                                 family)
+                                                 beta_prior = beta_prior,
+                                                 beta = param_list[[k]]$beta,
+                                                 Y = Y, sigma = log_likelihood_extra_args$sd, X = X,
+                                                 family = family)
 
         sample_beta_j_iteration_nextk <- distributional::generate(sample_dist, 1)[[1]]
       }
 
       if (sample_method == "slice_sampling") {
+
+        log_potential_from_betaj_only_fun_of_betaj <- function(new_beta_j) {
+
+          args <- c(
+            list(new_beta_j = new_beta_j,
+                 j = j,
+                 current_beta = param_list[[k]]$beta,
+                 current_eta = param_list[[k]]$eta,
+                 X = X,
+                 family = family,
+                 Y = Y,
+                 beta_prior = beta_prior),
+            log_likelihood_extra_args
+          )
+
+          return(do.call(log_potential_from_betaj, args = args))
+        }
+
         sample_beta_j_iteration_nextk <- qslice_fun(
           x = param_list[[k]]$beta[[j]],
-          log_target = function(new_beta_j) log_potential_from_betaj(new_beta_j, j = j,
-                                                                     current_beta = param_list[[k]]$beta,
-                                                                     current_eta = param_list[[k]]$eta,
-                                                                     X = X, family = family,
-                                                                     Y = Y,
-                                                                     beta_prior = beta_prior,
-                                                                     sd = known_Y_sigma),
+          log_target = log_potential_from_betaj_only_fun_of_betaj,
           ...)$x
       }
 
