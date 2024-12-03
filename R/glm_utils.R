@@ -1,6 +1,9 @@
 #' @export
 log_density <- function(family, main_parameter, Y, ...) {
-  family_with_dist_as_class <- structure(family, class = c(family$family, class(family)))
+  family_name_only_letters <- gsub("[^a-zA-Z]", "", family$family)
+
+  family_with_dist_as_class <- structure(family,
+                                         class = c(family_name_only_letters, class(family)))
 
   UseMethod("log_density", object = family_with_dist_as_class)
 }
@@ -18,6 +21,11 @@ log_density.binomial <- function(family, main_parameter, Y, ...) {
 #' @export
 log_density.poisson <- function(family, main_parameter, Y, ...) {
   dpois(Y, lambda = main_parameter, log = T)
+}
+
+#' @export
+log_density.NegativeBinomial <- function(family, main_parameter, Y, ...) {
+  dnbinom(Y, size = 1, mu = main_parameter, log = T)
 }
 
 #' Calculate log likelihood parametrised by "main_parameter"
