@@ -3,9 +3,9 @@ print.mcmcglm <- function(x) {
   cat("Object of class 'mcmcglm'\n\n")
   cat("Call:  ",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-  cat("Obtain mcmcglm$beta_samples with samples(mcmcglm):\n")
-  print(tail(samples(x)))
-  cat("\nInspect samples with the trace_plot function")
+  cat("Average of parameter samples:\n")
+  print(x$beta_mean)
+  cat("\n")
 }
 
 #' @export

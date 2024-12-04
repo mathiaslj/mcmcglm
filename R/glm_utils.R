@@ -56,9 +56,19 @@ log_likelihood <- function(family, main_parameter, Y, ...) {
   return(sum(log_density))
 }
 
+#' @export
+log_prior_density_val <- function(prior_distribution, x) {
+  UseMethod("log_prior_density_val")
+}
 
-log_prior_density_val = function(prior_distribution, x) {
+#' @export
+log_prior_density_val.default <- function(prior_distribution, x) {
   sum(unlist(density(prior_distribution, x, log = T)))
+}
+
+#' @export
+log_prior_density_val.list <- function(prior_distribution, x) {
+  sum(sapply(prior_distribution, log_prior_density_val.default, x = x))
 }
 
 #' Title
