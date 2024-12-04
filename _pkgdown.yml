@@ -18,5 +18,5 @@ reference:
   desc: >
     Methods to explore results - data of samples and function for creating trace plot
   contents:
-  - samples.mcmcglm
-  - trace_plot.mcmcglm
+  - samples
+  - trace_plot
