@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2024-12-04T06:21Z
+last_built: 2024-12-04T06:26Z
 urls:
   reference: https://mathiaslj.github.io/mcmcglm/reference
   article: https://mathiaslj.github.io/mcmcglm/articles
