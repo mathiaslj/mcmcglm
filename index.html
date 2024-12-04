@@ -56,12 +56,18 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of mcmcglm is to create a package with functionalities related to Gibbs sampling.</p>
-<p>Specifically, want to create a function that can perform the CGGibbs sampler from the article <a href="https://arxiv.org/abs/2410.03630" class="external-link">Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?</a></p>
+<p>The mcmcglm package implements the CGGibbs sampler from the article <a href="https://arxiv.org/abs/2410.03630" class="external-link">Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?</a>, which has linear run time as a function of number of parameters in a GLM model due to a clever “update” of the linear predictor.</p>
+<p>The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> parameter, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)</annotation></semantics></math> for a link function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math> specified by the family.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Installation available from here on GitHub. However, package very unstable.</p>
+<p>Installation available from <a href="">GitHub</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mathiaslj/mcmcglm"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <!-- ## Example -->
 <!-- This is a basic example which shows you how to solve a common problem: -->
 <!-- ```{r example} -->
