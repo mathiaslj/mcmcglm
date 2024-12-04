@@ -27,8 +27,9 @@
 #' is the intended value in most cases, as it works for any specification of `family` and `beta_prior`.
 #' `"normal-normal"` uses a conditional normal distribution to sample from in case of conjugate prior with
 #' gaussian response and `beta_prior`. Implemented for testing purposes but works for that niche case.
-#' @param qslice_fun a `function` from the [qslice] package. Default is [qslice::slice_stepping_out] which
-#' uses the slice sampler from
+#' @param qslice_fun a `function` from the
+#' [qslice](https://CRAN.R-project.org/package=qslice) package.
+#' Default is [qslice::slice_stepping_out] which uses the slice sampler from
 #' \href{https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full}{Neal 2003},
 #' but all functions are available.
 #' @param ... arguments passed onto the function specified by `qslice_fun`. For default [qslice::slice_stepping_out]
@@ -70,11 +71,12 @@
 #'                    sample_method = "slice_sampling",
 #'                    qslice_fun = qslice::slice_stepping_out,
 #'                    w = 0.5)
-#' trace_plot(norm)
+#' norm
 #'
 #' # For family "binomial" with logit link and iid gamma distributed prior
+#' # if (require("arm")) {
 #' y_logit <- rbinom (n, 1, arm::invlogit(lin_pred))
-#' dat_logit <- data.frame(Y = y_logit, B1 = x1, B2 = x2)
+#' dat_logit <- data.frame(Y = y_logit, X1 = x1, X2 = x2)
 #'
 #' logit <- mcmcglm(formula = Y ~ .,
 #'                    data = dat_logit,
@@ -85,12 +87,16 @@
 #'                    sample_method = "slice_sampling",
 #'                    qslice_fun = qslice::slice_stepping_out,
 #'                    w = 0.8)
-#' trace_plot(logit)
+#' logit
+#' # }
 #'
 #' # For family "negative.binomial" and multivariate normal specification of parameter priors
-#' y_log <- rnbinom(n, size = 1, mu = exp(lin_pred))
-#' dat_log <- data.frame(A = y_log, B1 = x1, B2 = x2)
 #'
+#' # if (require("MASS")) {
+#' y_log <- rnbinom(n, size = 1, mu = exp(lin_pred))
+#' dat_log <- data.frame(Y = y_log, X1 = x1, X2 = x2)
+#'
+#' # if (require("mvtnorm")) {
 #' log <- mcmcglm(formula = Y ~ X1,
 #'                    data = dat_log,
 #'                    beta_prior = distributional::dist_multivariate_normal(
@@ -103,9 +109,11 @@
 #'                    sample_method = "slice_sampling",
 #'                    qslice_fun = qslice::slice_stepping_out,
 #'                    w = 0.8)
-#' trace_plot(log)
+#' # }
+#' log
 #'
-#' # For family "negative.binomial" and specification of different independent priors for each parameter
+#' # For family "negative.binomial" and specification of different independent
+#' # priors for each parameter
 #' log2 <- mcmcglm(formula = Y ~ .,
 #'                    data = dat_log,
 #'                    beta_prior = list(distributional::dist_normal(0, 1),
@@ -117,7 +125,7 @@
 #'                    sample_method = "slice_sampling",
 #'                    qslice_fun = qslice::slice_stepping_out,
 #'                    w = 0.8)
-#' trace_plot(log2)
+#' log2
 #'
 #' #############################################
 #' # Using a different slice function
@@ -133,8 +141,8 @@
 #'                    qslice_fun = qslice::slice_elliptical,
 #'                    mu = 1.5,
 #'                    sigma = 2)
-#' trace_plot(log3)
-#'
+#' log3
+#' # }
 mcmcglm <- function(formula,
                     family = gaussian,
                     data,

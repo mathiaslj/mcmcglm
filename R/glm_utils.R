@@ -36,7 +36,7 @@ log_density <- function(family, mu, Y, ...) {
 }
 
 #' @export
-log_density.gaussian <- function(family, mu, Y, sd) {
+log_density.gaussian <- function(family, mu, Y, sd, ...) {
   dnorm(Y, mean = mu, sd = sd, log = T)
 }
 

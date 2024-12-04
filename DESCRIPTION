@@ -9,15 +9,22 @@ License: MIT + file LICENSE
 URL: https://github.com/mathiaslj/mcmcglm
 BugReports: https://github.com/mathiaslj/mcmcglm/issues
 Imports: 
+    cli,
     distributional,
     dplyr,
     ggplot2,
     magrittr,
-    qslice
+    qslice,
+    stats,
+    tidyr
+Suggests: 
+    arm,
+    knitr,
+    MASS,
+    mvtnorm,
+    rmarkdown,
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Suggests: 
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr

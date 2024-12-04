@@ -1,5 +1,5 @@
 #' @export
-print.mcmcglm <- function(x) {
+print.mcmcglm <- function(x, ...) {
   cat("Object of class 'mcmcglm'\n\n")
   cat("Call:  ",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
@@ -8,6 +8,10 @@ print.mcmcglm <- function(x) {
   cat("\n")
 }
 
+#' Get the drawn samples from the object
+#'
+#' @param x an `mcmcglm` object
+#'
 #' @export
 samples <- function(x) {
   UseMethod("samples")
@@ -18,8 +22,14 @@ samples.mcmcglm <- function(x) {
   x$beta_samples
 }
 
+#' Create a trace plot of the MCMC samples
+#'
+#' @inheritParams samples
+#' @param samples_drop a `numeric` specifying a number of initial samples to
+#' exclude from the trace_plot to improve the axis zoom on the plot
+#'
 #' @export
-trace_plot <- function(x) {
+trace_plot <- function(x, samples_drop = NULL) {
   UseMethod("trace_plot")
 }
 

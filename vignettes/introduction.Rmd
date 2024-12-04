@@ -21,15 +21,14 @@ library(mcmcglm)
 ## Adding methods for new families
 
 Fx. for inverse gaussian distribution add the method
-```{r}
-#' @export
+```{r, eval = FALSE}
 log_density.inverse.gaussian <- function(family, main_parameter, Y, ...) {
   statmod::dinvgauss(Y, mean = main_parameter, ..., log = T)
 }
 ```
 
 and when calling `mcmcglm` remember to add the additional arguments to this density through the `log_likelihood_extra_args` argument in this case by doing fx.
-```{r}
+```{r, eval = FALSE}
 mcmcglm <- mcmcglm(family = "inverse.gaussian",
                    log_density_extra_args = list(shape = x, dispersion = y),
                    "other arguments")
