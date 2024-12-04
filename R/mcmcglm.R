@@ -262,6 +262,7 @@ mcmcglm <- function(formula,
               family = family,
               formula = formula,
               call = call,
+              burnin = burnin,
               sample_method = sample_method,
               qslice_fun = qslice_fun)
 

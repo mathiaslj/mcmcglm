@@ -24,7 +24,9 @@ trace_plot <- function(x) {
 }
 
 #' @export
-trace_plot.mcmcglm <- function(x, samples_drop = 10) {
+trace_plot.mcmcglm <- function(x, samples_drop = NULL) {
+  if (is.null(samples_drop)) samples_drop <- ceiling(x$burnin/2)
+
   data_removed_samples <- samples(x) %>%
     dplyr::filter(iteration > samples_drop)
 
