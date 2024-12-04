@@ -6,7 +6,7 @@ Authors@R:
 Description: Sample posterior distributions using variations of Gibbs
     samplers
 License: MIT + file LICENSE
-URL: https://github.com/mathiaslj/mcmcglm
+URL: https://github.com/mathiaslj/mcmcglm, https://mathiaslj.github.io/mcmcglm/
 BugReports: https://github.com/mathiaslj/mcmcglm/issues
 Imports: 
     cli,
