@@ -18,13 +18,19 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of mcmcglm is to create a package with functionalities related to Gibbs sampling.
+The mcmcglm package implements the CGGibbs sampler from the article [Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?](https://arxiv.org/abs/2410.03630), which has linear run time as a function of number of parameters in a GLM model due to a clever "update" of the linear predictor.
 
-Specifically, want to create a function that can perform the CGGibbs sampler from the article [Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?](https://arxiv.org/abs/2410.03630)
+The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the $\beta$ parameter, where $\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)$ for a link function $g$ specified by the family. 
 
 ## Installation
 
-Installation available from here on GitHub. However, package very unstable.
+Installation available from [GitHub]() with:
+
+```{r, eval = FALSE}
+devtools::install_github("mathiaslj/mcmcglm")
+```
+
+## Examples
 
 <!-- ## Example -->
 
