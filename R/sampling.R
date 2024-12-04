@@ -1,12 +1,6 @@
-# sample_coord = function() {
-#   current_beta <- self$beta[self$parameter_index]
-#   slice_sample <- sample_fun(current_beta, private$generate_log_potential, w = 0.5)
-#
-#   self$beta[self$parameter_index] <- slice_sample$x
-#
-#   return(invisible(self))
-# }
-
+#' Function for getting the multivariate normal distribution resulting from a
+#' normally distributed response as well as prior
+#' @noRd
 normal_normal_posterior <- function(beta_prior, beta, Y, sigma, X, family) {
   cov_beta <- distributional::covariance(beta_prior)[[1]]
   if (is.null(nrow(cov_beta))) cov_beta <- cov_beta * diag(nrow = ncol(X))
@@ -19,6 +13,9 @@ normal_normal_posterior <- function(beta_prior, beta, Y, sigma, X, family) {
   return(posterior_dist)
 }
 
+#' Function for getting the conditional distribution of the j'th component of beta
+#' given all other components and data
+#' @noRd
 conditional_normal_beta_j <- function(j, beta_prior, beta, Y, sigma, X, family) {
   args <- as.list(environment())
   dist <- do.call(normal_normal_posterior, args[-1])

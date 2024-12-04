@@ -1,3 +1,5 @@
+#' Converts string or function to a family object
+#' @noRd
 check_family <- function(family) {
   if (is.character(family)) {
     family <- get(family, mode = "function", envir = parent.frame())
@@ -13,6 +15,8 @@ check_family <- function(family) {
   return(family)
 }
 
+#' Uses formula to retrieve response variable and model matrix
+#' @noRd
 extract_model_data <- function(formula, data) {
   mf <- stats::model.frame(formula, data = data)
   mt <- attr(mf, "terms")
@@ -30,16 +34,3 @@ extract_model_data <- function(formula, data) {
 
   return(list(Y = Y, X = X))
 }
-
-# extract_modelframe_from_call <- function(call) {
-#
-#   m <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
-#              names(call),
-#              0L)
-#   call <- call[c(1L, m)]
-#   call$drop.unused.levels <- TRUE
-#   call[[1L]] <- quote(stats::model.frame)
-#   mf <- eval(call, parent.frame())
-#
-#   return(mf)
-# }

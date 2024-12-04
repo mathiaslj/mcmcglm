@@ -1,0 +1,37 @@
+---
+title: "introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mcmcglm)
+```
+
+## Adding methods for new families
+
+Fx. for inverse gaussian distribution add the method
+```{r}
+#' @export
+log_density.inverse.gaussian <- function(family, main_parameter, Y, ...) {
+  statmod::dinvgauss(Y, mean = main_parameter, ..., log = T)
+}
+```
+
+and when calling `mcmcglm` remember to add the additional arguments to this density through the `log_likelihood_extra_args` argument in this case by doing fx.
+```{r}
+mcmcglm <- mcmcglm(family = "inverse.gaussian",
+                   log_density_extra_args = list(shape = x, dispersion = y),
+                   "other arguments")
+```
+

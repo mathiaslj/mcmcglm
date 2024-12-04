@@ -3,12 +3,21 @@ Title: Gibbs Sampling Methods
 Version: 0.0.0.9000
 Authors@R: 
     person("Mathias Lerbech", "Jeppesen", , "mathiasljeppesen@outlook.com", role = c("aut", "cre"))
-Description: Sample posterior distributions using variations of Gibbs samplers
+Description: Sample posterior distributions using variations of Gibbs
+    samplers
 License: MIT + file LICENSE
+URL: https://github.com/mathiaslj/mcmcglm
+BugReports: https://github.com/mathiaslj/mcmcglm/issues
+Imports: 
+    distributional,
+    dplyr,
+    ggplot2,
+    magrittr,
+    qslice
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Imports: 
-    magrittr
-URL: https://github.com/mathiaslj/mcmcglm
-BugReports: https://github.com/mathiaslj/mcmcglm/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

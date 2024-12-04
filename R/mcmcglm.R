@@ -3,7 +3,7 @@
 #' @description
 #' Obtain MCMC samples using slice sampling within Gibbs for generalized linear models (GLMs) using
 #' compute graph Gibbs (CGGibbs) which has linear runtime in the number of variables in the model
-#' matrix. Method is described in the articl
+#' matrix. Method is described in the article
 #'  [Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?](https://arxiv.org/abs/2410.03630),
 #'  and see more in details below.
 #'
@@ -29,7 +29,7 @@
 #' gaussian response and `beta_prior`. Implemented for testing purposes but works for that niche case.
 #' @param qslice_fun a `function` from the [qslice] package. Default is [qslice::slice_stepping_out] which
 #' uses the slice sampler from
-#' [https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full](Neal 2003),
+#' \href{https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full}{Neal 2003},
 #' but all functions are available.
 #' @param ... arguments passed onto the function specified by `qslice_fun`. For default [qslice::slice_stepping_out]
 #' `w` needs to be specified, while for fx. [qslice::slice_elliptical], `mu` and `sigma` need to be specified
@@ -38,6 +38,8 @@
 #' uses an updating scheme for the linear predictor during each
 #' draw of Gibbs sampling on coordinates of the parameter vector
 #'
+#' @references [Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?](https://arxiv.org/abs/2410.03630),
+#' \href{https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full}{Neal 2003}
 #'
 #' @return An object of class `mcmcglm` with methods for getting a `data.frame` of parameter samples, plotting, etc.
 #' @export
@@ -222,7 +224,7 @@ mcmcglm <- function(formula,
                  j = j,
                  current_beta = param_list[[k]]$beta,
                  current_eta = param_list[[k]]$eta,
-                 X = X,
+                 X_j = X[, j],
                  family = family,
                  Y = Y,
                  beta_prior = beta_prior),
