@@ -3,7 +3,7 @@ template:
   bootstrap: 5
 
 reference:
-- title: Functions for calculating the log-potential
+- title: Calculating the log-potential
   desc: >
     Utilities for calculating the log-potential as a function of a new coordinate of parameter vector in order to perform slice sampling within Gibbs
   contents:
@@ -11,10 +11,12 @@ reference:
   - log_likelihood
   - update_linear_predictor
   - log_potential_from_betaj
-- title: Function for sampling from posterior distribution of parameters in a GLM
+- title: Sampling posterior distributions of parameters in a GLM
+  desc: >
+    Function to perform sampling as well as methods to investigate results
   contents:
   - mcmcglm
-- title: Methods for `mcmcglm` objects
+- subtitle: Methods for `mcmcglm` objects
   desc: >
     Methods to explore results - data of samples and function for creating trace plot
   contents:
