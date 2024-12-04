@@ -1,5 +1,5 @@
 ---
-title: "introduction"
+title: "Customising functionalities"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{introduction}
@@ -21,16 +21,19 @@ library(mcmcglm)
 ## Adding methods for new families
 
 Fx. for inverse gaussian distribution add the method
-```{r, eval = FALSE}
+```{r}
+#' @export
 log_density.inverse.gaussian <- function(family, main_parameter, Y, ...) {
   statmod::dinvgauss(Y, mean = main_parameter, ..., log = T)
 }
 ```
 
 and when calling `mcmcglm` remember to add the additional arguments to this density through the `log_likelihood_extra_args` argument in this case by doing fx.
-```{r, eval = FALSE}
+```{r}
 mcmcglm <- mcmcglm(family = "inverse.gaussian",
                    log_density_extra_args = list(shape = x, dispersion = y),
                    "other arguments")
 ```
+
+## Using other samplers
 
