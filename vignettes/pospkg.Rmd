@@ -109,17 +109,17 @@ trace_plot(probit)
 
 For the poisson family, the most commonly used link function is log, which is the only one we will showcase as the above example for the binomial family shows how it's easily possible to specify the link function.
 
-First, we define the data
+Define the data
 ```{r, label = poisson-data}
 mu_log <- exp(lin_pred)
-y_log <- rpois(n, size = 1, prob = mu_log)
-dat_log <- data.frame(Y = y_log, X1 = x1, X2 = x2)
+y_pois <- rpois(n, lambda = mu_log)
+dat_pois <- data.frame(Y = y_pois, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = poisson-run-show}
 pois <- mcmcglm(formula = Y ~ .,
-                 data = dat_log,
+                 data = dat_pois,
                  family = "poisson",
                  beta_prior = distributional::dist_normal(mean = 0, sd = 1),
                  w = 0.5)
@@ -129,7 +129,29 @@ trace_plot(pois)
 
 ### Example for negative binomial family
 
-Besides 
+Besides the families available in the [stats](help("family")) package, other families have been implemented in various packages. Fx. the `MASS::negative.binomial()` function which allows the use of the negative binomial family in various inference procedures.
+
+This distribution is an interesting choice for modelling of count data when a Poisson distribution is not appropriate due to the equality of the first and second moment of the distribution.
+
+Below we showcase the use of this family using this package.
+```{r, label = negbin-data}
+mu_log <- exp(lin_pred)
+y_nbinom <- rnbinom(n, size = 1, mu = mu_log)
+dat_nbinom <- data.frame(Y = y_nbinom, X1 = x1, X2 = x2)
+
+theta <- 3
+```
+
+Then we fit the `mcmcglm` and inspect the trace plot.
+```{r, label = poisson-run-show}
+nbinom <- mcmcglm(formula = Y ~ .,
+                 data = dat_nbinom,
+                 family = MASS::negative.binomial(theta),
+                 beta_prior = distributional::dist_normal(mean = 0, sd = 1),
+                 w = 0.5)
+nbinom
+trace_plot(nbinom)
+```
 
 ## Changing the prior distribution
 
