@@ -3,8 +3,7 @@ Title: Gibbs Sampling Methods
 Version: 0.0.0.9000
 Authors@R: 
     person("Mathias Lerbech", "Jeppesen", , "mathiasljeppesen@outlook.com", role = c("aut", "cre"))
-Description: Sample posterior distributions using variations of Gibbs
-    samplers
+Description: Sample posterior distributions using variations of slice within Gibbs samplers for GLMs.
 License: MIT + file LICENSE
 URL: https://github.com/mathiaslj/mcmcglm, https://mathiaslj.github.io/mcmcglm/
 BugReports: https://github.com/mathiaslj/mcmcglm/issues
