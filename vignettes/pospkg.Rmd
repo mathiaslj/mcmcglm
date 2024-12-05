@@ -11,8 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
 collapse = TRUE,
 comment = "#>",
-fig.width = 8,
-progress = FALSE
+fig.width = 8
 )
 ```
 
@@ -249,8 +248,8 @@ The default method of slice sampling is with "stepping-out" and "shrinkage" as d
 
 All `slice_` functions from the [qslice](https://CRAN.R-project.org/package=qslice) package have arguments `x` and `log_target`. The `mcmcglm` function finds these entities as a new component of the $\beta$ vector in any given iteration and as the log-potential evaluated as a function of this new value of the parameter.
 
-Thus, the task left to the user is to specify tuning parameters of the chosen algorithm, which is passed through `...` in `mcmcglm()`. The default slice sampler uses the `qslice::slice_stepping_out()` function, which has a mandatory non-default argument `w` with the slice width of the algorithm. Thus, as readers might have noticed in other examples, a specification of `w = x` is given in the calls to `mcmcglm()`. Example below for completeness:
-```{r}
+Thus, the task left to the user is to specify tuning parameters of the chosen algorithm, which is passed through `...` in `mcmcglm()`. The default slice sampler uses the `qslice::slice_stepping_out()` function, which has a mandatory non-default argument `w` with the slice width of the algorithm. Thus, as readers might have noticed in other examples within this vignette or the [README](https://mathiaslj.github.io/mcmcglm/index.html), a specification of `w = x` is given in the calls to `mcmcglm()`. Example below for completeness:
+```{r slice-default}
 norm <- mcmcglm(formula = Y ~ .,
                 family = "gaussian",
                 data = dat_norm,
@@ -258,21 +257,58 @@ norm <- mcmcglm(formula = Y ~ .,
                 w = 0.5)
 ```
 
-#### Plotting across slice widths
-```{r}
-w05_mcmcglms <- mcmcglm_across_slicewidths(
-  ws = seq(from = 0.5, by = 0.5, length.out = 9),
+
+### Changing the default slice sampling method
+
+The argument `qslice_fun` in the `mcmcglm()` function allows the user to change the default slice sampler `qslice::slice_stepping_out()` to any slice sampler from the `qslice` package. Thus, below is an example of using `qslice::slice_elliptical()` from [Murray et al. (2010)](https://proceedings.mlr.press/v9/murray10a), which has tuning parameters `mu` and `sigma`:
+```{r slice-elliptical}
+el <- mcmcglm(formula = Y ~ .,
+                family = "gaussian",
+                data = dat_norm,
+                beta_prior = distributional::dist_normal(0, 1),
+                qslice_fun = qslice::slice_elliptical,
+                mu = 3,
+                sigma = 2)
+trace_plot(el)
+```
+
+### Investigating effect of tuning parameters of slice sampler
+
+The utility functions `mcmcglm_across_tuningparams()` and `plot_mcmcglm_across_tuningparams()` can be used to create trace plots of the samples from running the algorithm with different values of tuning parameters.
+
+#### Varying slice width for the default slice sampler
+
+Fx. for the default choice of slice sampler, `qslice::slice_stepping_out()`, the tuning parameter is the slice width `w`. A way to create a plot of samples across different values of the slice width is seen below:
+
+```{r vary-w}
+w05_mcmcglms <- mcmcglm_across_tuningparams(
+  seq(from = 0.5, by = 0.5, length.out = 4),
+  tuning_parameter_name = "w",
   formula = Y ~ .,
   family = "gaussian",
   data = dat_norm)
 
-plot_mcmcglm_across_slicewidths(w05_mcmcglms)
+plot_mcmcglm_across_tuningparams(w05_mcmcglms)
 ```
 
+#### Varying degrees of freedom in a generalized elliptical slice sampler
 
+Since the utility function work generally for any single tuning parameter, below is an example of `qslice::slice_elliptical` sampling procedure described in [Nishihara et al. (2014)](https://jmlr.org/papers/v15/nishihara14a.html), varying the `df` parameter in the algorithm.
 
-### Changing the default slice sampling method
+> Note that only a single tuning parameter can be "varied" at a time. So in the below example, we have to keep `sigma` and `mu` constant, while we vary over `df`
 
-The argument `qslice_fun` in the `mcmcglm()` function allows the user to change the default slice sampler `qslice::slice_stepping_out()` to any slice sampler from the `qslice` package
+```{r vary-df}
+df1_mcmcglms <- mcmcglm_across_tuningparams(
+  c(1, seq(from = 10, by = 10, length.out = 3)),
+  tuning_parameter_name = "df",
+  formula = Y ~ .,
+  family = "gaussian",
+  data = dat_norm,
+  qslice_fun = qslice::slice_genelliptical,
+  mu = 2,
+  sigma = 1)
+
+plot_mcmcglm_across_tuningparams(df1_mcmcglms)
+```
 
 ### Normal-normal sample method
