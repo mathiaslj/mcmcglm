@@ -11,6 +11,7 @@ Sample posterior distributions using variations of Gibbs samplers
 Useful links:
 \itemize{
   \item \url{https://github.com/mathiaslj/mcmcglm}
+  \item \url{https://mathiaslj.github.io/mcmcglm/}
   \item Report bugs at \url{https://github.com/mathiaslj/mcmcglm/issues}
 }
 
