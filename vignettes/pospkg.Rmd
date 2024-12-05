@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
 collapse = TRUE,
 comment = "#>",
-fig.width = 7
+fig.width = 8
 )
 ```
 
@@ -129,7 +129,7 @@ trace_plot(pois)
 
 ### Example for negative binomial family
 
-Besides the families available in the [stats](help("family")) package, other families have been implemented in various packages. Fx. the `MASS::negative.binomial()` function which allows the use of the negative binomial family in various inference procedures.
+Besides the families available in the stats package (via `help("family")`), other families have been implemented in various packages. Fx. the `MASS::negative.binomial()` function which allows the use of the negative binomial family in various inference procedures.
 
 This distribution is an interesting choice for modelling of count data when a Poisson distribution is not appropriate due to the equality of the first and second moment of the distribution.
 
