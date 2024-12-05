@@ -13,6 +13,7 @@ Imports:
     dplyr,
     ggplot2,
     magrittr,
+    patchwork,
     qslice,
     stats,
     tidyr
