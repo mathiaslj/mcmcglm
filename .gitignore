@@ -8,3 +8,6 @@ inst/doc
 docs
 /doc/
 /Meta/
+*.tar*
+*.Rcheck/
+dev/
