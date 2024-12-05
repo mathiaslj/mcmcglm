@@ -36,7 +36,6 @@ jobs:
           extra-packages: |
             any::pkgdown
             local::.
-            any::patchwork
           needs: website
 
       - name: Build site
