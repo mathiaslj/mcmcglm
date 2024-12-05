@@ -143,7 +143,7 @@ theta <- 3
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
-```{r, label = poisson-run-show}
+```{r, label = negbin-run-show}
 nbinom <- mcmcglm(formula = Y ~ .,
                  data = dat_nbinom,
                  family = MASS::negative.binomial(theta),
