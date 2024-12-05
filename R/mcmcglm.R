@@ -152,12 +152,10 @@ mcmcglm <- function(formula,
 
   sample_method <- match.arg(sample_method)
 
-  if (is.null(sample_method)) stop("Specify a `sample_method`")
-
   if (burnin >= n_samples) stop("Need more iterations than burnin")
 
   tuning_parameter_qslice_fun_not_given <- length(list(...)) == 0
-  if (tuning_parameter_qslice_fun_not_given)
+  if (tuning_parameter_qslice_fun_not_given & sample_method == "slice_sampling")
     stop("A tuning parameter for the `qslice_fun` is missing. For default choice of `qslice::slice_stepping_out` a slice width w needs to be provided")
 
   family <- check_family(family = family)
