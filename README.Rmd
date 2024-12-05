@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # mcmcglm
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/mathiaslj/mcmcglm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mathiaslj/mcmcglm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The mcmcglm package implements the CGGibbs sampler from the article [Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?](https://arxiv.org/abs/2410.03630), which has linear run time as a function of number of parameters in a GLM model due to a clever "update" of the linear predictor.

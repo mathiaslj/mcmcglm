@@ -4,6 +4,8 @@
 # mcmcglm
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/mathiaslj/mcmcglm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mathiaslj/mcmcglm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The mcmcglm package implements the CGGibbs sampler from the article [Is
@@ -78,7 +80,7 @@ norm
 #> 
 #> Average of parameter samples:
 #>   (Intercept)       X1       X2
-#> 1    1.154711 1.495975 1.704673
+#> 1    0.993832 1.462849 1.853451
 ```
 
 summarising the call of the function with averages of the samples of
@@ -91,13 +93,13 @@ function:
 
 ``` r
 head(samples(norm))
-#>   (Intercept)         X1        X2 iteration burnin
-#> 1  -0.3566355 -0.6567774 -1.911033         0   TRUE
-#> 2  -0.0407047  1.7918987  6.312742         1   TRUE
-#> 3  -1.5444480  1.9038014  5.500643         2   TRUE
-#> 4  -1.2251190  1.5762099  4.836526         3   TRUE
-#> 5  -0.8322131  1.5943287  4.019490         4   TRUE
-#> 6  -0.2479394  1.6440873  2.273112         5   TRUE
+#>   (Intercept)         X1          X2 iteration burnin
+#> 1   0.7790950 -0.2593636 0.008033492         0   TRUE
+#> 2   1.5983313 -0.1397206 1.158868556         1   TRUE
+#> 3   0.8179573  0.1823955 1.567834897         2   TRUE
+#> 4   0.8968259  0.9220448 1.795172772         3   TRUE
+#> 5   0.7812049  1.5043864 2.171278333         4   TRUE
+#> 6   0.9919815  1.6206131 2.030677196         5   TRUE
 ```
 
 A trace plot can be seen with the function `trace_plot`:
