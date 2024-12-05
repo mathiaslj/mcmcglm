@@ -21,7 +21,7 @@ library(mcmcglm)
 
 ## Family of response
 
-The family of the response can be any family with an implemented `family` class, in principle. As of now, the implemented families in the package are
+The family of the response can be any family with an implemented `family` class, in principle (see `help("family")`). As of now, the implemented families in the package are
 
 - Gaussian
 - Binomial
@@ -32,13 +32,9 @@ However, only a small amount of work is needed from the user to enable the use o
 
 Due to the implementation using a `family` object, This also means that any compatible link function can be used for a family, like fx. logit or probit for the binomial family. Also, the unexported `check_family` function in the package ensures that accepted values for the `family` argument in all the package's functions are a `character`, `family` function or a `family` class object. The different uses will be seen throughout the examples in this vignette but is also available in the example section of the `mcmcglm()` documentation.
 
-An example for the gaussian family is available in the introductory example in the [README](https://mathiaslj.github.io/mcmcglm/index.html).
-
-### Examples for different family (and link) specifications
+#### Data simulation for examples
 
 In order to show that the package provides samples from the target posterior distribution, we simulate data for each scenario with known $\beta$ vector in order to see if the empirical distribution of each coefficient seems to match the value we simulated data from.
-
-#### Data simulation for examples
 
 We start by generating a linear predictor $\eta=X\beta$ from known values of $\beta$ and sampled values making up the design matrix $X$. Then, in each example we can apply the relevant inverse link function $g^{-1}$ to obtain the modelled mean $\mu=g^{-1}(X\beta)$ in the GLM model. We can the simulate our response as sampling from the distribution corresponding to the family using the modelled mean $\mu$ as the relevant parameter of the distribution.
 
@@ -52,7 +48,9 @@ b2 <- 2
 lin_pred <- b0+b1*x1+b2*x2
 ```
 
-#### Example for binomial family
+An example for the gaussian family is available in the introductory example in the [README](https://mathiaslj.github.io/mcmcglm/index.html).
+
+### Example for binomial family
 
 For the binomial family, the most commonly used link function is the logit given by
 \begin{align}
@@ -63,29 +61,29 @@ but other link functions are also available, including probit, cauchit, log and 
 
 We'll show an example first for the binomial family with logit link function.
 
-##### Logit link function
+#### Logit link function
 
 First, we define the data
 ```{r, label = logit-data}
 logit_binom <- binomial(link = "logit")
 
-mu_log <- logit_binom$linkinv(lin_pred)
-y_log <- rbinom(n, size = 1, prob = mu_log)
-dat_log <- data.frame(Y = y_log, X1 = x1, X2 = x2)
+mu_probit <- logit_binom$linkinv(lin_pred)
+y_probit <- rbinom(n, size = 1, prob = mu_probit)
+dat_probit <- data.frame(Y = y_probit, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = logit-run-show}
-pois <- mcmcglm(formula = Y ~ .,
-                 data = dat_log,
-                 family = "poisson",
+probit <- mcmcglm(formula = Y ~ .,
+                 data = dat_probit,
+                 family = binomial(link = "probit"),
                  beta_prior = distributional::dist_normal(mean = 0, sd = 1),
                  w = 0.5)
-pois
-trace_plot(pois)
+probit
+trace_plot(probit)
 ```
 
-##### Probit link function
+#### Probit link function
 
 First, we define the data
 ```{r, label = probit-data}
@@ -107,27 +105,31 @@ probit
 trace_plot(probit)
 ```
 
-#### Example for poisson family
+### Example for poisson family
 
 For the poisson family, the most commonly used link function is log, which is the only one we will showcase as the above example for the binomial family shows how it's easily possible to specify the link function.
 
 First, we define the data
 ```{r, label = poisson-data}
-mu_probit <- exp(lin_pred)
-y_probit <- rbinom(n, size = 1, prob = mu_probit)
-dat_probit <- data.frame(Y = y_probit, X1 = x1, X2 = x2)
+mu_log <- exp(lin_pred)
+y_log <- rpois(n, size = 1, prob = mu_log)
+dat_log <- data.frame(Y = y_log, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = poisson-run-show}
-probit <- mcmcglm(formula = Y ~ .,
-                 data = dat_probit,
-                 family = binomial(link = "probit"),
+pois <- mcmcglm(formula = Y ~ .,
+                 data = dat_log,
+                 family = "poisson",
                  beta_prior = distributional::dist_normal(mean = 0, sd = 1),
                  w = 0.5)
-probit
-trace_plot(probit)
+pois
+trace_plot(pois)
 ```
+
+### Example for negative binomial family
+
+Besides 
 
 ## Changing the prior distribution
 
