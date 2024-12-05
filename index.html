@@ -56,7 +56,7 @@
 <div class="page-header"><h1 id="mcmcglm">mcmcglm<a class="anchor" aria-label="anchor" href="#mcmcglm"></a>
 </h1></div>
 <!-- badges: start -->
-<!-- badges: end -->
+
 <p>The mcmcglm package implements the CGGibbs sampler from the article <a href="https://arxiv.org/abs/2410.03630" class="external-link">Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?</a>, which has linear run time as a function of number of parameters in a GLM model due to a clever “update” of the linear predictor.</p>
 <p>The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> parameter, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)</annotation></semantics></math> for a link function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math> specified by the family. See more in <code><a href="articles/pospkg.html">vignette("pospkg")</a></code>.</p>
 <div class="section level2">
@@ -109,7 +109,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
 <span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
-<span><span class="co">#&gt; 1    1.154711 1.495975 1.704673</span></span></code></pre></div>
+<span><span class="co">#&gt; 1    0.993832 1.462849 1.853451</span></span></code></pre></div>
 <p>summarising the call of the function with averages of the samples of each parameter in the GLM model.</p>
 <div class="section level3">
 <h3 id="investigating-results">Investigating results<a class="anchor" aria-label="anchor" href="#investigating-results"></a>
@@ -117,13 +117,13 @@
 <p>The full data set of samples can be accessed with the <code>samples</code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/samples.html">samples</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   (Intercept)         X1        X2 iteration burnin</span></span>
-<span><span class="co">#&gt; 1  -0.3566355 -0.6567774 -1.911033         0   TRUE</span></span>
-<span><span class="co">#&gt; 2  -0.0407047  1.7918987  6.312742         1   TRUE</span></span>
-<span><span class="co">#&gt; 3  -1.5444480  1.9038014  5.500643         2   TRUE</span></span>
-<span><span class="co">#&gt; 4  -1.2251190  1.5762099  4.836526         3   TRUE</span></span>
-<span><span class="co">#&gt; 5  -0.8322131  1.5943287  4.019490         4   TRUE</span></span>
-<span><span class="co">#&gt; 6  -0.2479394  1.6440873  2.273112         5   TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;   (Intercept)         X1          X2 iteration burnin</span></span>
+<span><span class="co">#&gt; 1   0.7790950 -0.2593636 0.008033492         0   TRUE</span></span>
+<span><span class="co">#&gt; 2   1.5983313 -0.1397206 1.158868556         1   TRUE</span></span>
+<span><span class="co">#&gt; 3   0.8179573  0.1823955 1.567834897         2   TRUE</span></span>
+<span><span class="co">#&gt; 4   0.8968259  0.9220448 1.795172772         3   TRUE</span></span>
+<span><span class="co">#&gt; 5   0.7812049  1.5043864 2.171278333         4   TRUE</span></span>
+<span><span class="co">#&gt; 6   0.9919815  1.6206131 2.030677196         5   TRUE</span></span></code></pre></div>
 <p>A trace plot can be seen with the function <code>trace_plot</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span></code></pre></div>
@@ -178,7 +178,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/mathiaslj/mcmcglm/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/mathiaslj/mcmcglm/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
