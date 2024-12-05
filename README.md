@@ -75,8 +75,8 @@ norm
 #>     beta_prior = distributional::dist_normal(0, 1), w = 0.5)
 #> 
 #> Average of parameter samples:
-#>   (Intercept)       X1     X2
-#> 1    1.101161 1.550086 1.6712
+#>   (Intercept)       X1       X2
+#> 1    1.081188 1.563513 1.733437
 ```
 
 summarising the call of the function with averages of the samples of
