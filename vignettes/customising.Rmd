@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup, include = FALSE}
 library(mcmcglm)
-set.seed(42)
+withr::local_seed(42)
 ```
 
 ## Adding methods for new families

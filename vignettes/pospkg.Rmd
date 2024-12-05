@@ -18,7 +18,7 @@ fig.width = 8
 ```{r setup, include = FALSE}
 library(mcmcglm)
 withr::local_options(list(cli.progress_show_after = 300))
-set.seed(42)
+withr::local_seed(42)
 ```
 
 ## Family of response
