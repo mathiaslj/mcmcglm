@@ -22,3 +22,10 @@ reference:
   contents:
   - samples
   - trace_plot
+
+articles:
+- title: Sampling posterior distributions across families and posteriors
+  navbar: ~
+  contents:
+  - pospkg
+  - customising
