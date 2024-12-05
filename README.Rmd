@@ -31,8 +31,9 @@ Installation available from [GitHub](https://github.com/mathiaslj/mcmcglm) with:
 devtools::install_github("mathiaslj/mcmcglm")
 ```
 
-```{r setup}
+```{r, setup, include = FALSE}
 library(mcmcglm, warn.conflicts = FALSE)
+set.seed(42)
 ```
 
 ## Example

@@ -28,10 +28,6 @@ Installation available from
 devtools::install_github("mathiaslj/mcmcglm")
 ```
 
-``` r
-library(mcmcglm, warn.conflicts = FALSE)
-```
-
 ## Example
 
 We first simulate some data from a linear model to use for showcasing
@@ -79,8 +75,8 @@ norm
 #>     beta_prior = distributional::dist_normal(0, 1), w = 0.5)
 #> 
 #> Average of parameter samples:
-#>   (Intercept)       X1       X2
-#> 1    1.308767 1.588089 1.911371
+#>   (Intercept)       X1     X2
+#> 1    1.101161 1.550086 1.6712
 ```
 
 summarising the call of the function with averages of the samples of
@@ -93,13 +89,13 @@ function:
 
 ``` r
 head(samples(norm))
-#>   (Intercept)        X1         X2 iteration burnin
-#> 1   -1.175349 0.3342448 -0.4236988         0   TRUE
-#> 2    3.800078 1.9470571 -0.3653884         1   TRUE
-#> 3    1.781214 1.2777100  0.5939912         2   TRUE
-#> 4    2.057276 1.3513283  1.2464906         3   TRUE
-#> 5    1.917690 1.3670896  1.3285935         4   TRUE
-#> 6    1.891912 1.5566877  0.9924681         5   TRUE
+#>   (Intercept)         X1         X2 iteration burnin
+#> 1   -1.096156 0.04905045 -1.1984959         0   TRUE
+#> 2    5.150198 2.27939313 -2.0547715         1   TRUE
+#> 3    1.171198 2.10736753 -1.4556810         2   TRUE
+#> 4    2.201093 1.02283189  0.1304377         3   TRUE
+#> 5    1.761626 1.99163723  0.3076245         4   TRUE
+#> 6    1.715483 1.29845999  1.5699513         5   TRUE
 ```
 
 A trace plot can be seen with the function `trace_plot`:

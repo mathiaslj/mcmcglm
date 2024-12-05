@@ -15,8 +15,9 @@ fig.width = 8
 )
 ```
 
-```{r setup}
+```{r setup, include = FALSE}
 library(mcmcglm)
+set.seed(42)
 ```
 
 ## Family of response
