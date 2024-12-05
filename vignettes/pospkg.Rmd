@@ -312,3 +312,13 @@ plot_mcmcglm_across_tuningparams(df1_mcmcglms)
 ```
 
 ### Normal-normal sample method
+
+Mostly for testing purposes, the package has an implementation of sampling from a closed-form normal distribution in the case where both the response and prior are normally distributed. Running this requires specifying `"normal-normal"` in the argument `sample_method` in `mcmcglm()` as seen in the example below:
+```{r normal-normal}
+norm_norm <- mcmcglm(formula = Y ~ .,
+                family = "gaussian",
+                data = dat_norm,
+                beta_prior = distributional::dist_normal(0, 1),
+                sample_method = "normal-normal")
+trace_plot(norm_norm)
+```
