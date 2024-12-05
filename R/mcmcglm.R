@@ -74,7 +74,6 @@
 #' norm
 #'
 #' # For family "binomial" with logit link and iid gamma distributed prior
-#' # if (require("arm")) {
 #' y_logit <- rbinom (n, 1, arm::invlogit(lin_pred))
 #' dat_logit <- data.frame(Y = y_logit, X1 = x1, X2 = x2)
 #'
@@ -88,15 +87,12 @@
 #'                    qslice_fun = qslice::slice_stepping_out,
 #'                    w = 0.8)
 #' logit
-#' # }
 #'
 #' # For family "negative.binomial" and multivariate normal specification of parameter priors
 #'
-#' # if (require("MASS")) {
 #' y_log <- rnbinom(n, size = 1, mu = exp(lin_pred))
 #' dat_log <- data.frame(Y = y_log, X1 = x1, X2 = x2)
 #'
-#' # if (require("mvtnorm")) {
 #' log <- mcmcglm(formula = Y ~ X1,
 #'                    data = dat_log,
 #'                    beta_prior = distributional::dist_multivariate_normal(
@@ -109,7 +105,6 @@
 #'                    sample_method = "slice_sampling",
 #'                    qslice_fun = qslice::slice_stepping_out,
 #'                    w = 0.8)
-#' # }
 #' log
 #'
 #' # For family "negative.binomial" and specification of different independent
@@ -142,7 +137,6 @@
 #'                    mu = 1.5,
 #'                    sigma = 2)
 #' log3
-#' # }
 mcmcglm <- function(formula,
                     family = gaussian,
                     data,
@@ -158,9 +152,13 @@ mcmcglm <- function(formula,
 
   sample_method <- match.arg(sample_method)
 
-  if (is.null(sample_method)) stop("Specify a sample_method")
+  if (is.null(sample_method)) stop("Specify a `sample_method`")
 
   if (burnin >= n_samples) stop("Need more iterations than burnin")
+
+  tuning_parameter_qslice_fun_not_given <- length(list(...)) == 0
+  if (tuning_parameter_qslice_fun_not_given)
+    stop("A tuning parameter for the `qslice_fun` is missing. For default choice of `qslice::slice_stepping_out` a slice width w needs to be provided")
 
   family <- check_family(family = family)
   if (missing(data)) {

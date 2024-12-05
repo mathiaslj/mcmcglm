@@ -98,7 +98,6 @@ norm <- mcmcglm(formula = Y ~ .,
 norm
 
 # For family "binomial" with logit link and iid gamma distributed prior
-# if (require("arm")) {
 y_logit <- rbinom (n, 1, arm::invlogit(lin_pred))
 dat_logit <- data.frame(Y = y_logit, X1 = x1, X2 = x2)
 
@@ -112,15 +111,12 @@ logit <- mcmcglm(formula = Y ~ .,
                    qslice_fun = qslice::slice_stepping_out,
                    w = 0.8)
 logit
-# }
 
 # For family "negative.binomial" and multivariate normal specification of parameter priors
 
-# if (require("MASS")) {
 y_log <- rnbinom(n, size = 1, mu = exp(lin_pred))
 dat_log <- data.frame(Y = y_log, X1 = x1, X2 = x2)
 
-# if (require("mvtnorm")) {
 log <- mcmcglm(formula = Y ~ X1,
                    data = dat_log,
                    beta_prior = distributional::dist_multivariate_normal(
@@ -133,7 +129,6 @@ log <- mcmcglm(formula = Y ~ X1,
                    sample_method = "slice_sampling",
                    qslice_fun = qslice::slice_stepping_out,
                    w = 0.8)
-# }
 log
 
 # For family "negative.binomial" and specification of different independent
@@ -166,7 +161,6 @@ log3 <- mcmcglm(formula = Y ~ .,
                    mu = 1.5,
                    sigma = 2)
 log3
-# }
 }
 \references{
 \href{https://arxiv.org/abs/2410.03630}{Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?},
