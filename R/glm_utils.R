@@ -22,6 +22,7 @@
 #' @export
 #'
 log_density <- function(family, mu, Y, ...) {
+  family <- check_family(family)
   family_name_only_letters <- gsub("[^a-zA-Z\\.]", "", family$family)
 
   family_with_dist_as_class <- structure(
@@ -66,6 +67,29 @@ log_density.NegativeBinomial <- function(family, mu, Y, ...) {
 #' @return `numeric` Value of log-likelihood
 #' @export
 #'
+#' @examples
+#' # Create a test data
+#' n <- 100
+#' x1 <- rnorm (n)
+#' x2 <- rbinom (n, 1, .5)
+#' b0 <- 1
+#' b1 <- 1.5
+#' b2 <- 2
+#' lin_pred <- b0+b1*x1+b2*x2
+#' known_sigma <- 1
+#'
+#' y_norm <- rnorm(n, mean = lin_pred, sd = known_sigma)
+#' model_matrix_norm <- as.matrix(
+#'    data.frame(int = 1, X1 = x1, X2 = x2))
+#'
+#' b_prior <- 1:3
+#'
+#' mu <- model_matrix_norm %*% b_prior
+#'
+#' log_likelihood(family = gaussian,
+#'                mu = mu,
+#'                Y = y_norm,
+#'                sd = known_sigma)
 log_likelihood <- function(family, mu, Y, ...) {
   args <- c(as.list(environment()), list(...))
 
@@ -125,12 +149,47 @@ update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j)
 #' @return The value of the log-potential having changed the j'th component of the `current_beta`
 #' to `new_beta_j`
 #' @export
+#'
+#' @examples
+#' # Create a test data
+#' n <- 100
+#' x1 <- rnorm (n)
+#' x2 <- rbinom (n, 1, .5)
+#' b0 <- 1
+#' b1 <- 1.5
+#' b2 <- 2
+#' lin_pred <- b0+b1*x1+b2*x2
+#' known_sigma <- 1
+#'
+#' y_norm <- rnorm(n, mean = lin_pred, sd = known_sigma)
+#' model_matrix_norm <- as.matrix(
+#'    data.frame(int = 1, X1 = x1, X2 = x2))
+#' b_prior <- distributional::dist_normal(mean = 0, sd = 1)
+#' b_prior_init <- distributional::generate(
+#'     b_prior,
+#'     ncol(model_matrix_norm)
+#' )[[1]]
+#'
+#' eta_init <- model_matrix_norm %*% b_prior_init
+#'
+#' j <- 1
+#' new_beta_j <- 4
+#'
+#' log_potential_from_betaj(new_beta_j = new_beta_j,
+#'                          j = j, current_beta = b_prior_init,
+#'                          current_eta = eta_init,
+#'                          Y = y_norm,
+#'                          X_j = model_matrix_norm[, j],
+#'                          family = gaussian,
+#'                          beta_prior = b_prior,
+#'                          sd = known_sigma)
 log_potential_from_betaj <- function(new_beta_j, j,
                                      current_beta,
                                      current_eta,
                                      Y, X_j, family,
                                      beta_prior,
                                      ...) {
+  family <- check_family(family)
   current_beta_j <- current_beta[[j]]
 
   new_eta <- update_linear_predictor(new_beta_j,

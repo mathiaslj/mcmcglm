@@ -46,3 +46,37 @@ to \code{new_beta_j}
 Calculates the log-potential as a function of a new coordinate of the beta parameter
 vector. Done like this to use the unexporte
 }
+\examples{
+# Create a test data
+n <- 100
+x1 <- rnorm (n)
+x2 <- rbinom (n, 1, .5)
+b0 <- 1
+b1 <- 1.5
+b2 <- 2
+lin_pred <- b0+b1*x1+b2*x2
+known_sigma <- 1
+
+y_norm <- rnorm(n, mean = lin_pred, sd = known_sigma)
+model_matrix_norm <- as.matrix(
+   data.frame(int = 1, X1 = x1, X2 = x2))
+b_prior <- distributional::dist_normal(mean = 0, sd = 1)
+b_prior_init <- distributional::generate(
+    b_prior,
+    ncol(model_matrix_norm)
+)[[1]]
+
+eta_init <- model_matrix_norm \%*\% b_prior_init
+
+j <- 1
+new_beta_j <- 4
+
+log_potential_from_betaj(new_beta_j = new_beta_j,
+                         j = j, current_beta = b_prior_init,
+                         current_eta = eta_init,
+                         Y = y_norm,
+                         X_j = model_matrix_norm[, j],
+                         family = gaussian,
+                         beta_prior = b_prior,
+                         sd = known_sigma)
+}
