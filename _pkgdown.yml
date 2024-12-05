@@ -22,6 +22,12 @@ reference:
   contents:
   - samples
   - trace_plot
+- subtitle: Tuning parameters of slice sampling
+  desc: >
+    Functions for getting a list of results across tuning parameter values and plotting them
+  contents:
+  - mcmcglm_across_tuningparams
+  - plot_mcmcglm_across_tuningparams
 
 articles:
 - title: Sampling posterior distributions across families and posteriors
@@ -29,3 +35,4 @@ articles:
   contents:
   - pospkg
   - customising
+  - performance
