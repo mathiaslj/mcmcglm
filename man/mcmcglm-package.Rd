@@ -5,7 +5,7 @@
 \alias{mcmcglm-package}
 \title{mcmcglm: Gibbs Sampling Methods}
 \description{
-Sample posterior distributions using variations of Gibbs samplers
+Sample posterior distributions using variations of slice within Gibbs samplers for GLMs.
 }
 \seealso{
 Useful links:

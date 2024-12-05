@@ -142,11 +142,11 @@ mcmcglm <- function(formula,
                     data,
                     beta_prior = distributional::dist_normal(0, 1),
                     log_likelihood_extra_args = list(sd = 1),
-                    n_samples = 100,
-                    burnin = 10,
                     sample_method = c("slice_sampling", "normal-normal"),
                     qslice_fun = qslice::slice_stepping_out,
-                    ...) {
+                    ...,
+                    n_samples = 100,
+                    burnin = 10) {
 
   call <- match.call()
 

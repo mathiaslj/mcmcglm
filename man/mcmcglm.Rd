@@ -10,11 +10,11 @@ mcmcglm(
   data,
   beta_prior = distributional::dist_normal(0, 1),
   log_likelihood_extra_args = list(sd = 1),
-  n_samples = 100,
-  burnin = 10,
   sample_method = c("slice_sampling", "normal-normal"),
   qslice_fun = qslice::slice_stepping_out,
-  ...
+  ...,
+  n_samples = 100,
+  burnin = 10
 )
 }
 \arguments{
@@ -36,11 +36,6 @@ from \code{environment(formula)}, typically the environment from which the funct
 Fx. specification of \code{log_likelihood_extra_args = list(sd = x)} is needed for the case of
 \code{family = "gaussian"}}
 
-\item{n_samples}{a \code{numeric} with number of samples to draw of each parameter(/variable) in the model}
-
-\item{burnin}{a \code{numeric} with the number of samples to be marked as "burnin". Burnin samples are not
-included in the \code{beta_mean} calculation to increase finite sample performance of the LLN estimate}
-
 \item{sample_method}{a \code{character} specifying the method used for sampling. The default \code{"slice_sampling"}
 is the intended value in most cases, as it works for any specification of \code{family} and \code{beta_prior}.
 \code{"normal-normal"} uses a conditional normal distribution to sample from in case of conjugate prior with
@@ -54,6 +49,11 @@ but all functions are available.}
 
 \item{...}{arguments passed onto the function specified by \code{qslice_fun}. For default \link[qslice:slice_stepping_out]{qslice::slice_stepping_out}
 \code{w} needs to be specified, while for fx. \link[qslice:slice_elliptical]{qslice::slice_elliptical}, \code{mu} and \code{sigma} need to be specified}
+
+\item{n_samples}{a \code{numeric} with number of samples to draw of each parameter(/variable) in the model}
+
+\item{burnin}{a \code{numeric} with the number of samples to be marked as "burnin". Burnin samples are not
+included in the \code{beta_mean} calculation to increase finite sample performance of the LLN estimate}
 }
 \value{
 An object of class \code{mcmcglm} with methods for getting a \code{data.frame} of parameter samples, plotting, etc.
