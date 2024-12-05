@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 The mcmcglm package implements the CGGibbs sampler from the article [Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?](https://arxiv.org/abs/2410.03630), which has linear run time as a function of number of parameters in a GLM model due to a clever "update" of the linear predictor.
 
-The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the $\beta$ parameter, where $\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)$ for a link function $g$ specified by the family. 
+The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the $\beta$ parameter, where $\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)$ for a link function $g$ specified by the family. See more in `vignette("pospkg")`.
 
 ## Installation
 
@@ -36,8 +36,8 @@ library(mcmcglm, warn.conflicts = FALSE)
 
 ## Example
 
-We first simulate some data from a linear model to use for showcasing the use of `mcmcglm` for gaussian family.
-```{r}
+We first simulate some data from a linear model to use for showcasing the use of `mcmcglm` for a gaussian family.
+```{r, label = data-generation}
 n <- 100
 x1 <- rnorm (n)
 x2 <- rbinom (n, 1, .5)
@@ -55,7 +55,7 @@ The use of the function `mcmcglm` is then similar in interface to the `glm` func
 - the prior of the parameter $\beta$
 - a tuning parameter for the slice sampling procedure specified by the `qslice_fun` argument.
     - The default is the `qslice::slice_stepping_out` function, which performs slice sampling as described in [Neal 2003](https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full) for which a slice width `w` needs to be specified.
-```{r}
+```{r, label = gaussian-run}
 norm <- mcmcglm(formula = Y ~ .,
                 family = "gaussian",
                 data = dat_norm,
@@ -64,7 +64,7 @@ norm <- mcmcglm(formula = Y ~ .,
 ```
 
 This creates an `mcmcglm` object which prints as
-```{r}
+```{r, label = gaussian-print}
 norm
 ```
 
@@ -73,12 +73,12 @@ summarising the call of the function with averages of the samples of each parame
 ### Investigating results
 
 The full data set of samples can be accessed with the `samples` function:
-```{r}
+```{r, label = gaussian-samples}
 head(samples(norm))
 ```
 
 A trace plot can be seen with the function `trace_plot`:
-```{r}
+```{r, label = gaussian-trace}
 trace_plot(norm)
 ```
 

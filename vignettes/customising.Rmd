@@ -2,7 +2,7 @@
 title: "Customising functionalities"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{Customising functionalities}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,8 +20,10 @@ library(mcmcglm)
 
 ## Adding methods for new families
 
+the only missing piece for any other families is a method for calculating the log-density of the distribution, which has been made very easily 
+
 Fx. for inverse gaussian distribution add the method
-```{r}
+```{r, eval = FALSE}
 #' @export
 log_density.inverse.gaussian <- function(family, main_parameter, Y, ...) {
   statmod::dinvgauss(Y, mean = main_parameter, ..., log = T)
@@ -29,7 +31,7 @@ log_density.inverse.gaussian <- function(family, main_parameter, Y, ...) {
 ```
 
 and when calling `mcmcglm` remember to add the additional arguments to this density through the `log_likelihood_extra_args` argument in this case by doing fx.
-```{r}
+```{r, eval = FALSE}
 mcmcglm <- mcmcglm(family = "inverse.gaussian",
                    log_density_extra_args = list(shape = x, dispersion = y),
                    "other arguments")

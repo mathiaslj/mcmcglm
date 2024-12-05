@@ -15,7 +15,7 @@ of the linear predictor.
 The package is implemented in a way that the user can specify any family
 of the response and any distribution for the prior of the $\beta$
 parameter, where $\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)$ for a link
-function $g$ specified by the family.
+function $g$ specified by the family. See more in `vignette("pospkg")`.
 
 ## Installation
 
@@ -33,7 +33,7 @@ library(mcmcglm, warn.conflicts = FALSE)
 ## Example
 
 We first simulate some data from a linear model to use for showcasing
-the use of `mcmcglm` for gaussian family.
+the use of `mcmcglm` for a gaussian family.
 
 ``` r
 n <- 100
@@ -78,7 +78,7 @@ norm
 #> 
 #> Average of parameter samples:
 #>   (Intercept)       X1       X2
-#> 1    1.091221 1.512445 2.050301
+#> 1    1.154711 1.495975 1.704673
 ```
 
 summarising the call of the function with averages of the samples of
@@ -91,13 +91,13 @@ function:
 
 ``` r
 head(samples(norm))
-#>   (Intercept)         X1          X2 iteration burnin
-#> 1   0.3857177 -2.9277409 -1.21248865         0   TRUE
-#> 2   2.9252660 -1.9922807 -0.06228526         1   TRUE
-#> 3   2.6856617 -1.5257322  0.18113356         2   TRUE
-#> 4   0.4859976  0.4084817  3.62244621         3   TRUE
-#> 5  -0.1581394  2.3318912  3.49951218         4   TRUE
-#> 6   0.9376372  2.3194226  1.62983558         5   TRUE
+#>   (Intercept)         X1        X2 iteration burnin
+#> 1  -0.3566355 -0.6567774 -1.911033         0   TRUE
+#> 2  -0.0407047  1.7918987  6.312742         1   TRUE
+#> 3  -1.5444480  1.9038014  5.500643         2   TRUE
+#> 4  -1.2251190  1.5762099  4.836526         3   TRUE
+#> 5  -0.8322131  1.5943287  4.019490         4   TRUE
+#> 6  -0.2479394  1.6440873  2.273112         5   TRUE
 ```
 
 A trace plot can be seen with the function `trace_plot`:
@@ -106,7 +106,7 @@ A trace plot can be seen with the function `trace_plot`:
 trace_plot(norm)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-gaussian-trace-1.png" width="100%" />
 
 <!-- ## Example -->
 <!-- This is a basic example which shows you how to solve a common problem: -->
