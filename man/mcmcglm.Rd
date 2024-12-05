@@ -13,8 +13,8 @@ mcmcglm(
   sample_method = c("slice_sampling", "normal-normal"),
   qslice_fun = qslice::slice_stepping_out,
   ...,
-  n_samples = 100,
-  burnin = 10
+  n_samples = 500,
+  burnin = 100
 )
 }
 \arguments{

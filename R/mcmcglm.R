@@ -145,8 +145,8 @@ mcmcglm <- function(formula,
                     sample_method = c("slice_sampling", "normal-normal"),
                     qslice_fun = qslice::slice_stepping_out,
                     ...,
-                    n_samples = 100,
-                    burnin = 10) {
+                    n_samples = 500,
+                    burnin = 100) {
 
   call <- match.call()
 
@@ -262,17 +262,20 @@ mcmcglm <- function(formula,
     dplyr::filter(burnin == FALSE) %>%
     dplyr::summarise(dplyr::across(1:3, function(x) mean(x)))
 
-  out <- list(beta_samples = beta_data,
-              beta_mean = beta_mean,
-              data = data,
-              model_matrix = X,
-              param_list = param_list,
-              family = family,
-              formula = formula,
-              call = call,
-              burnin = burnin,
-              sample_method = sample_method,
-              qslice_fun = qslice_fun)
+  out <- c(
+    list(beta_samples = beta_data,
+         beta_mean = beta_mean,
+         data = data,
+         model_matrix = X,
+         param_list = param_list,
+         family = family,
+         formula = formula,
+         call = call,
+         burnin = burnin,
+         sample_method = sample_method,
+         qslice_fun = qslice_fun),
+    list(...)
+  )
 
   out <- structure(out, class = c("mcmcglm", class(out)))
   return(out)

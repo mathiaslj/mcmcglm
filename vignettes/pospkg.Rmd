@@ -11,12 +11,14 @@ vignette: >
 knitr::opts_chunk$set(
 collapse = TRUE,
 comment = "#>",
-fig.width = 8
+fig.width = 8,
+progress = FALSE
 )
 ```
 
 ```{r setup, include = FALSE}
 library(mcmcglm)
+withr::local_options(list(cli.progress_show_after = 300))
 set.seed(42)
 ```
 
@@ -68,20 +70,20 @@ First, we define the data
 ```{r, label = logit-data}
 logit_binom <- binomial(link = "logit")
 
-mu_probit <- logit_binom$linkinv(lin_pred)
-y_probit <- rbinom(n, size = 1, prob = mu_probit)
-dat_probit <- data.frame(Y = y_probit, X1 = x1, X2 = x2)
+mu_logit <- logit_binom$linkinv(lin_pred)
+y_logit <- rbinom(n, size = 1, prob = mu_logit)
+dat_logit <- data.frame(Y = y_logit, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = logit-run-show}
-probit <- mcmcglm(formula = Y ~ .,
-                 data = dat_probit,
-                 family = binomial(link = "probit"),
-                 beta_prior = distributional::dist_normal(mean = 0, sd = 1),
-                 w = 0.5)
-probit
-trace_plot(probit)
+logit <- mcmcglm(formula = Y ~ .,
+                  data = dat_logit,
+                  family = binomial(link = "logit"),
+                  beta_prior = distributional::dist_normal(mean = 0, sd = 1),
+                  w = 0.5)
+logit
+trace_plot(logit)
 ```
 
 #### Probit link function
@@ -98,10 +100,10 @@ dat_probit <- data.frame(Y = y_probit, X1 = x1, X2 = x2)
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = probit-run-show}
 probit <- mcmcglm(formula = Y ~ .,
-                 data = dat_probit,
-                 family = binomial(link = "probit"),
-                 beta_prior = distributional::dist_normal(mean = 0, sd = 1),
-                 w = 0.5)
+                  data = dat_probit,
+                  family = binomial(link = "probit"),
+                  beta_prior = distributional::dist_normal(mean = 0, sd = 1),
+                  w = 0.5)
 probit
 trace_plot(probit)
 ```
@@ -120,10 +122,10 @@ dat_pois <- data.frame(Y = y_pois, X1 = x1, X2 = x2)
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = poisson-run-show}
 pois <- mcmcglm(formula = Y ~ .,
-                 data = dat_pois,
-                 family = "poisson",
-                 beta_prior = distributional::dist_normal(mean = 0, sd = 1),
-                 w = 0.5)
+                data = dat_pois,
+                family = "poisson",
+                beta_prior = distributional::dist_normal(mean = 0, sd = 1),
+                w = 0.5)
 pois
 trace_plot(pois)
 ```
@@ -146,14 +148,131 @@ theta <- 3
 Then we fit the `mcmcglm` and inspect the trace plot.
 ```{r, label = negbin-run-show}
 nbinom <- mcmcglm(formula = Y ~ .,
-                 data = dat_nbinom,
-                 family = MASS::negative.binomial(theta),
-                 beta_prior = distributional::dist_normal(mean = 0, sd = 1),
-                 w = 0.5)
+                  data = dat_nbinom,
+                  family = MASS::negative.binomial(theta),
+                  beta_prior = distributional::dist_normal(mean = 0, sd = 1),
+                  w = 0.5)
 nbinom
 trace_plot(nbinom)
 ```
 
-## Changing the prior distribution
+## Specifying the prior distribution
+
+The package uses the [distributional](https://CRAN.R-project.org/package=distributional) package to specify the prior distribution of the $\beta$ parameter as is mentioned in the documentation in `mcmcglm()`. The [distributional](https://CRAN.R-project.org/package=distributional) package provides vectorised distribution objects with specified parameters with methods for evaluating densities, CDFs, etc. and generate random samples from the distribution.
+
+The use in this package allows the user great flexibility in specifying varying independent univariate distributions or multivariate distributions for the parameter vector as will be illustrated in the examples below.
+
+In all examples we will simply use a gaussian family of the response as in the introductory example in the [README](https://mathiaslj.github.io/mcmcglm/index.html) and alternate prior specifications.
+
+Start by defining some data.
+
+```{r, label = norm-data}
+y_norm <- rnorm(n, mean = lin_pred, sd = 1)
+dat_norm <- data.frame(Y = y_norm, X1 = x1, X2 = x2)
+```
+
+### Example of iid priors
+
+In the case of iid priors, a single univariate distribution specification is needed:
+
+> To make the example not the exact same as the introductory example in the README, we show how the posterior distribution is affected by a prior with a mean very different from what the data(/likelihood) is showing.
+
+```{r iid-run-show}
+iid <- mcmcglm(formula = Y ~ .,
+               family = "gaussian",
+               data = dat_norm,
+               beta_prior = distributional::dist_normal(1000, 1),
+               w = 0.5)
+trace_plot(iid)
+```
+
+Of course, any distribution could be used here using the `dist_` functions of the [distributional](https://CRAN.R-project.org/package=distributional) package. Here, we simply use a normal distribution with `distributional::dist_normal()`, but it might as well have been `distributional::dist_gamma()`, `distributional::dist_student_t()`, etc. See the [Reference](https://pkg.mitchelloharawild.com/distributional/reference/index.html) for a full list of distributions.
+
+### Example of independent and potentially different priors
+
+Due to an S3 method implementation in this [mcmcglm](https://github.com/mathiaslj/mcmcglm) package, it's possible to specify `beta_prior` as a list of `distribution` objects. For illustrative purposes, we use the distributions mentioned in the above example to specify a different prior for each $\beta$ component.
+```{r indep-run-show}
+indep <- mcmcglm(formula = Y ~ .,
+                 family = "gaussian",
+                 data = dat_norm,
+                 beta_prior = list(
+                   distributional::dist_normal(mean = 0, sd = 1),
+                   distributional::dist_gamma(shape = 1, rate = 2),
+                   distributional::dist_student_t(df = 8, mu = 3, sigma = 1)
+                 ),
+                 w = 0.5)
+trace_plot(indep)
+```
+
+
+### Example of multivariate prior
+
+The only implemented multivariate distribution is the `distributional::dist_multivariate_normal()`, which we can use to specify different moments and potential correlation between parameters in the model. An example is shown below with a prior distribution specified as
+\begin{align}
+\beta\sim \mathcal{N}_3\left(
+\begin{pmatrix}
+1\\2\\3
+\end{pmatrix},
+\begin{bmatrix}
+1 & 0.5 & 0.2\\
+0.5 & 1 & 0.5\\
+0.2 & 0.5 & 1
+\end{bmatrix}
+\right)
+\end{align}
+
+```{r mult-run-show}
+mult <- mcmcglm(formula = Y ~ .,
+                family = "gaussian",
+                data = dat_norm,
+                beta_prior = distributional::dist_multivariate_normal(
+                  mu = list(1:3),
+                  sigma = list(
+                    matrix(
+                      c(1, 0.5, 0.2, 0.5, 1, 0.5, 0.2, 0.5, 1),
+                      ncol = 3,
+                      byrow = TRUE))
+                ),
+                w = 0.5)
+trace_plot(mult)
+```
 
 ## Tuning (and changing) the slice sampler procedure
+
+The sampling procedure in the package uses the compute graph gibbs (CGGibbs) sampler as introduced in [Luu et al. 2024](https://arxiv.org/abs/2410.03630). This is done to efficiently "update" the linear predictor after each gibbs update of a single component of the parameter vector rather than naively recalculating the linear predictor using all terms. The linear predictor is then used to calculate the log-likelihood, which is summed with the log-density of the prior distribution to obtain the log-potential, being the log-posterior up to a normalising constant.
+
+This method is combined with slice sampling, which enables us to use any combination of family of the response and prior distribution of the parameters as we do not rely on conjugacy to get closed-form distributions to sample from. Further, the method avoids spending computational power on numerical integration to find the normalising constant corresponding to the marginal distribution of data as the sampling procedure needs only know the posterior up to proportionality; the reason we use the log-potential.
+
+The default method of slice sampling is with "stepping-out" and "shrinkage" as described in [Neal 2003](https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full).
+
+### Using the default slice sampling method
+
+All `slice_` functions from the [qslice](https://CRAN.R-project.org/package=qslice) package have arguments `x` and `log_target`. The `mcmcglm` function finds these entities as a new component of the $\beta$ vector in any given iteration and as the log-potential evaluated as a function of this new value of the parameter.
+
+Thus, the task left to the user is to specify tuning parameters of the chosen algorithm, which is passed through `...` in `mcmcglm()`. The default slice sampler uses the `qslice::slice_stepping_out()` function, which has a mandatory non-default argument `w` with the slice width of the algorithm. Thus, as readers might have noticed in other examples, a specification of `w = x` is given in the calls to `mcmcglm()`. Example below for completeness:
+```{r}
+norm <- mcmcglm(formula = Y ~ .,
+                family = "gaussian",
+                data = dat_norm,
+                beta_prior = distributional::dist_normal(0, 1),
+                w = 0.5)
+```
+
+#### Plotting across slice widths
+```{r}
+w05_mcmcglms <- mcmcglm_across_slicewidths(
+  ws = seq(from = 0.5, by = 0.5, length.out = 9),
+  formula = Y ~ .,
+  family = "gaussian",
+  data = dat_norm)
+
+plot_mcmcglm_across_slicewidths(w05_mcmcglms)
+```
+
+
+
+### Changing the default slice sampling method
+
+The argument `qslice_fun` in the `mcmcglm()` function allows the user to change the default slice sampler `qslice::slice_stepping_out()` to any slice sampler from the `qslice` package
+
+### Normal-normal sample method
