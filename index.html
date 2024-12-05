@@ -65,14 +65,12 @@
 <p>Installation available from <a href="https://github.com/mathiaslj/mcmcglm" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mathiaslj/mcmcglm"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mathiaslj/mcmcglm" class="external-link">mcmcglm</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>We first simulate some data from a linear model to use for showcasing the use of <code>mcmcglm</code> for a gaussian family.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span> <span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span> <span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">.5</span><span class="op">)</span></span>
@@ -93,14 +91,14 @@
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>                family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
 <span>                data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
 <span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p>This creates an <code>mcmcglm</code> object which prints as</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">norm</span></span>
 <span><span class="co">#&gt; Object of class 'mcmcglm'</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -108,24 +106,24 @@
 <span><span class="co">#&gt;     beta_prior = distributional::dist_normal(0, 1), w = 0.5)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
-<span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
-<span><span class="co">#&gt; 1    1.308767 1.588089 1.911371</span></span></code></pre></div>
+<span><span class="co">#&gt;   (Intercept)       X1     X2</span></span>
+<span><span class="co">#&gt; 1    1.101161 1.550086 1.6712</span></span></code></pre></div>
 <p>summarising the call of the function with averages of the samples of each parameter in the GLM model.</p>
 <div class="section level3">
 <h3 id="investigating-results">Investigating results<a class="anchor" aria-label="anchor" href="#investigating-results"></a>
 </h3>
 <p>The full data set of samples can be accessed with the <code>samples</code> function:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/samples.html">samples</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   (Intercept)        X1         X2 iteration burnin</span></span>
-<span><span class="co">#&gt; 1   -1.175349 0.3342448 -0.4236988         0   TRUE</span></span>
-<span><span class="co">#&gt; 2    3.800078 1.9470571 -0.3653884         1   TRUE</span></span>
-<span><span class="co">#&gt; 3    1.781214 1.2777100  0.5939912         2   TRUE</span></span>
-<span><span class="co">#&gt; 4    2.057276 1.3513283  1.2464906         3   TRUE</span></span>
-<span><span class="co">#&gt; 5    1.917690 1.3670896  1.3285935         4   TRUE</span></span>
-<span><span class="co">#&gt; 6    1.891912 1.5566877  0.9924681         5   TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;   (Intercept)         X1         X2 iteration burnin</span></span>
+<span><span class="co">#&gt; 1   -1.096156 0.04905045 -1.1984959         0   TRUE</span></span>
+<span><span class="co">#&gt; 2    5.150198 2.27939313 -2.0547715         1   TRUE</span></span>
+<span><span class="co">#&gt; 3    1.171198 2.10736753 -1.4556810         2   TRUE</span></span>
+<span><span class="co">#&gt; 4    2.201093 1.02283189  0.1304377         3   TRUE</span></span>
+<span><span class="co">#&gt; 5    1.761626 1.99163723  0.3076245         4   TRUE</span></span>
+<span><span class="co">#&gt; 6    1.715483 1.29845999  1.5699513         5   TRUE</span></span></code></pre></div>
 <p>A trace plot can be seen with the function <code>trace_plot</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-gaussian-trace-1.png" width="100%"></p>
 <!-- ## Example -->
