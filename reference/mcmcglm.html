@@ -61,11 +61,11 @@ and see more in details below.</p>
 <span>  <span class="va">data</span>,</span>
 <span>  beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  log_likelihood_extra_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  n_samples <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  burnin <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  sample_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slice_sampling"</span>, <span class="st">"normal-normal"</span><span class="op">)</span>,</span>
 <span>  qslice_fun <span class="op">=</span> <span class="fu">qslice</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">slice_stepping_out</a></span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  n_samples <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  burnin <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,15 +101,6 @@ Fx. specification of <code>log_likelihood_extra_args = list(sd = x)</code> is ne
 <code>family = "gaussian"</code></p></dd>
 
 
-<dt id="arg-n-samples">n_samples<a class="anchor" aria-label="anchor" href="#arg-n-samples"></a></dt>
-<dd><p>a <code>numeric</code> with number of samples to draw of each parameter(/variable) in the model</p></dd>
-
-
-<dt id="arg-burnin">burnin<a class="anchor" aria-label="anchor" href="#arg-burnin"></a></dt>
-<dd><p>a <code>numeric</code> with the number of samples to be marked as "burnin". Burnin samples are not
-included in the <code>beta_mean</code> calculation to increase finite sample performance of the LLN estimate</p></dd>
-
-
 <dt id="arg-sample-method">sample_method<a class="anchor" aria-label="anchor" href="#arg-sample-method"></a></dt>
 <dd><p>a <code>character</code> specifying the method used for sampling. The default <code>"slice_sampling"</code>
 is the intended value in most cases, as it works for any specification of <code>family</code> and <code>beta_prior</code>.
@@ -128,6 +119,15 @@ but all functions are available.</p></dd>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments passed onto the function specified by <code>qslice_fun</code>. For default <a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">qslice::slice_stepping_out</a>
 <code>w</code> needs to be specified, while for fx. <a href="https://rdrr.io/pkg/qslice/man/slice_elliptical.html" class="external-link">qslice::slice_elliptical</a>, <code>mu</code> and <code>sigma</code> need to be specified</p></dd>
+
+
+<dt id="arg-n-samples">n_samples<a class="anchor" aria-label="anchor" href="#arg-n-samples"></a></dt>
+<dd><p>a <code>numeric</code> with number of samples to draw of each parameter(/variable) in the model</p></dd>
+
+
+<dt id="arg-burnin">burnin<a class="anchor" aria-label="anchor" href="#arg-burnin"></a></dt>
+<dd><p>a <code>numeric</code> with the number of samples to be marked as "burnin". Burnin samples are not
+included in the <code>beta_mean</code> calculation to increase finite sample performance of the LLN estimate</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -176,9 +176,9 @@ draw of Gibbs sampling on coordinates of the parameter vector</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Object of class 'mcmcglm'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:  mcmcglm(formula = Y ~ ., family = "gaussian", data = dat_norm, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     beta_prior = distributional::dist_normal(0, 1), n_samples = 100, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     burnin = 10, sample_method = "slice_sampling", qslice_fun = qslice::slice_stepping_out, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     w = 0.5)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     beta_prior = distributional::dist_normal(0, 1), sample_method = "slice_sampling", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     qslice_fun = qslice::slice_stepping_out, w = 0.5, n_samples = 100, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     burnin = 10)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Average of parameter samples:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (Intercept)       X1       X2</span>
@@ -203,8 +203,8 @@ draw of Gibbs sampling on coordinates of the parameter vector</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:  mcmcglm(formula = Y ~ ., family = binomial(link = "logit"), data = dat_logit, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     beta_prior = distributional::dist_gamma(shape = 1, rate = 0.5), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n_samples = 100, burnin = 10, sample_method = "slice_sampling", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     qslice_fun = qslice::slice_stepping_out, w = 0.8)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     sample_method = "slice_sampling", qslice_fun = qslice::slice_stepping_out, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     w = 0.8, n_samples = 100, burnin = 10)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Average of parameter samples:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (Intercept)       X1       X2</span>
@@ -234,8 +234,8 @@ draw of Gibbs sampling on coordinates of the parameter vector</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:  mcmcglm(formula = Y ~ X1, family = MASS::negative.binomial(3), </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data = dat_log, beta_prior = distributional::dist_multivariate_normal(mu = list(c(1, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         2)), sigma = list(matrix(c(1, 0.5, 0.5, 1), ncol = 2))), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n_samples = 100, burnin = 10, sample_method = "slice_sampling", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     qslice_fun = qslice::slice_stepping_out, w = 0.8)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     sample_method = "slice_sampling", qslice_fun = qslice::slice_stepping_out, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     w = 0.8, n_samples = 100, burnin = 10)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Average of parameter samples:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (Intercept)       X1 iteration</span>
@@ -261,8 +261,8 @@ draw of Gibbs sampling on coordinates of the parameter vector</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:  mcmcglm(formula = Y ~ ., family = MASS::negative.binomial(3), </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data = dat_log, beta_prior = list(distributional::dist_normal(0, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1), distributional::dist_gamma(1, 1), distributional::dist_exponential(2)), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n_samples = 100, burnin = 10, sample_method = "slice_sampling", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     qslice_fun = qslice::slice_stepping_out, w = 0.8)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     sample_method = "slice_sampling", qslice_fun = qslice::slice_stepping_out, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     w = 0.8, n_samples = 100, burnin = 10)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Average of parameter samples:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (Intercept)       X1       X2</span>
@@ -289,8 +289,8 @@ draw of Gibbs sampling on coordinates of the parameter vector</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:  mcmcglm(formula = Y ~ ., family = MASS::negative.binomial(3), </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data = dat_log, beta_prior = list(distributional::dist_normal(0, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1), distributional::dist_gamma(1, 1), distributional::dist_exponential(2)), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     n_samples = 100, burnin = 10, sample_method = "slice_sampling", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     qslice_fun = qslice::slice_elliptical, mu = 1.5, sigma = 2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     sample_method = "slice_sampling", qslice_fun = qslice::slice_elliptical, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mu = 1.5, sigma = 2, n_samples = 100, burnin = 10)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Average of parameter samples:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   (Intercept)       X1       X2</span>

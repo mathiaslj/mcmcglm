@@ -109,7 +109,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
 <span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
-<span><span class="co">#&gt; 1    0.993832 1.462849 1.853451</span></span></code></pre></div>
+<span><span class="co">#&gt; 1    1.308767 1.588089 1.911371</span></span></code></pre></div>
 <p>summarising the call of the function with averages of the samples of each parameter in the GLM model.</p>
 <div class="section level3">
 <h3 id="investigating-results">Investigating results<a class="anchor" aria-label="anchor" href="#investigating-results"></a>
@@ -117,13 +117,13 @@
 <p>The full data set of samples can be accessed with the <code>samples</code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/samples.html">samples</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   (Intercept)         X1          X2 iteration burnin</span></span>
-<span><span class="co">#&gt; 1   0.7790950 -0.2593636 0.008033492         0   TRUE</span></span>
-<span><span class="co">#&gt; 2   1.5983313 -0.1397206 1.158868556         1   TRUE</span></span>
-<span><span class="co">#&gt; 3   0.8179573  0.1823955 1.567834897         2   TRUE</span></span>
-<span><span class="co">#&gt; 4   0.8968259  0.9220448 1.795172772         3   TRUE</span></span>
-<span><span class="co">#&gt; 5   0.7812049  1.5043864 2.171278333         4   TRUE</span></span>
-<span><span class="co">#&gt; 6   0.9919815  1.6206131 2.030677196         5   TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;   (Intercept)        X1         X2 iteration burnin</span></span>
+<span><span class="co">#&gt; 1   -1.175349 0.3342448 -0.4236988         0   TRUE</span></span>
+<span><span class="co">#&gt; 2    3.800078 1.9470571 -0.3653884         1   TRUE</span></span>
+<span><span class="co">#&gt; 3    1.781214 1.2777100  0.5939912         2   TRUE</span></span>
+<span><span class="co">#&gt; 4    2.057276 1.3513283  1.2464906         3   TRUE</span></span>
+<span><span class="co">#&gt; 5    1.917690 1.3670896  1.3285935         4   TRUE</span></span>
+<span><span class="co">#&gt; 6    1.891912 1.5566877  0.9924681         5   TRUE</span></span></code></pre></div>
 <p>A trace plot can be seen with the function <code>trace_plot</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span></code></pre></div>
