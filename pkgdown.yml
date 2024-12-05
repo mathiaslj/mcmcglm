@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   customising: customising.html
   pospkg: pospkg.html
-last_built: 2024-12-05T16:37Z
+last_built: 2024-12-05T23:19Z
 urls:
   reference: https://mathiaslj.github.io/mcmcglm/reference
   article: https://mathiaslj.github.io/mcmcglm/articles

@@ -143,27 +143,27 @@ function.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">logit_binom</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mu_probit</span> <span class="op">&lt;-</span> <span class="va">logit_binom</span><span class="op">$</span><span class="fu">linkinv</span><span class="op">(</span><span class="va">lin_pred</span><span class="op">)</span></span>
-<span><span class="va">y_probit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">mu_probit</span><span class="op">)</span></span>
-<span><span class="va">dat_probit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">y_probit</span>, X1 <span class="op">=</span> <span class="va">x1</span>, X2 <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mu_logit</span> <span class="op">&lt;-</span> <span class="va">logit_binom</span><span class="op">$</span><span class="fu">linkinv</span><span class="op">(</span><span class="va">lin_pred</span><span class="op">)</span></span>
+<span><span class="va">y_logit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, size <span class="op">=</span> <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">mu_logit</span><span class="op">)</span></span>
+<span><span class="va">dat_logit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">y_logit</span>, X1 <span class="op">=</span> <span class="va">x1</span>, X2 <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
 <p>Then we fit the <code>mcmcglm</code> and inspect the trace plot.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">probit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                 data <span class="op">=</span> <span class="va">dat_probit</span>,</span>
-<span>                 family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span>,</span>
-<span>                 beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                 w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="va">probit</span></span>
+<code class="sourceCode R"><span><span class="va">logit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                  data <span class="op">=</span> <span class="va">dat_logit</span>,</span>
+<span>                  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span>,</span>
+<span>                  beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                  w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">logit</span></span>
 <span><span class="co">#&gt; Object of class 'mcmcglm'</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Call:  mcmcglm(formula = Y ~ ., family = binomial(link = "probit"), </span></span>
-<span><span class="co">#&gt;     data = dat_probit, beta_prior = distributional::dist_normal(mean = 0, </span></span>
-<span><span class="co">#&gt;         sd = 1), w = 0.5)</span></span>
+<span><span class="co">#&gt; Call:  mcmcglm(formula = Y ~ ., family = binomial(link = "logit"), data = dat_logit, </span></span>
+<span><span class="co">#&gt;     beta_prior = distributional::dist_normal(mean = 0, sd = 1), </span></span>
+<span><span class="co">#&gt;     w = 0.5)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
-<span><span class="co">#&gt;   (Intercept)        X1       X2</span></span>
-<span><span class="co">#&gt; 1    0.518525 0.8414789 1.202919</span></span>
-<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">probit</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
+<span><span class="co">#&gt; 1   0.8802159 1.461209 2.061524</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">logit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pospkg_files/figure-html/logit-run-show-1.png" width="768"></p>
 </div>
 <div class="section level4">
@@ -179,10 +179,10 @@ function.</p>
 <p>Then we fit the <code>mcmcglm</code> and inspect the trace plot.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                 data <span class="op">=</span> <span class="va">dat_probit</span>,</span>
-<span>                 family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span>,</span>
-<span>                 beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                 w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span>                  data <span class="op">=</span> <span class="va">dat_probit</span>,</span>
+<span>                  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span>,</span>
+<span>                  beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                  w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">probit</span></span>
 <span><span class="co">#&gt; Object of class 'mcmcglm'</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -192,7 +192,7 @@ function.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
 <span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
-<span><span class="co">#&gt; 1    1.136727 1.495188 1.783416</span></span>
+<span><span class="co">#&gt; 1   0.8318177 1.374661 2.162339</span></span>
 <span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">probit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pospkg_files/figure-html/probit-run-show-1.png" width="768"></p>
 </div>
@@ -212,10 +212,10 @@ function.</p>
 <p>Then we fit the <code>mcmcglm</code> and inspect the trace plot.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pois</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                 data <span class="op">=</span> <span class="va">dat_pois</span>,</span>
-<span>                 family <span class="op">=</span> <span class="st">"poisson"</span>,</span>
-<span>                 beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                 w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span>                data <span class="op">=</span> <span class="va">dat_pois</span>,</span>
+<span>                family <span class="op">=</span> <span class="st">"poisson"</span>,</span>
+<span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">pois</span></span>
 <span><span class="co">#&gt; Object of class 'mcmcglm'</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -225,7 +225,7 @@ function.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
 <span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
-<span><span class="co">#&gt; 1    1.030941 1.505277 1.956556</span></span>
+<span><span class="co">#&gt; 1   0.9969416 1.504678 1.997051</span></span>
 <span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">pois</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pospkg_files/figure-html/poisson-run-show-1.png" width="768"></p>
 </div>
@@ -250,10 +250,10 @@ of the first and second moment of the distribution.</p>
 <p>Then we fit the <code>mcmcglm</code> and inspect the trace plot.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nbinom</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                 data <span class="op">=</span> <span class="va">dat_nbinom</span>,</span>
-<span>                 family <span class="op">=</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/negative.binomial.html" class="external-link">negative.binomial</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>,</span>
-<span>                 beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                 w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span>                  data <span class="op">=</span> <span class="va">dat_nbinom</span>,</span>
+<span>                  family <span class="op">=</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/negative.binomial.html" class="external-link">negative.binomial</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>,</span>
+<span>                  beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                  w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">nbinom</span></span>
 <span><span class="co">#&gt; Object of class 'mcmcglm'</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -263,18 +263,261 @@ of the first and second moment of the distribution.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Average of parameter samples:</span></span>
 <span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
-<span><span class="co">#&gt; 1   0.9202369 1.581281 2.062504</span></span>
+<span><span class="co">#&gt; 1   0.9608508 1.431976 2.059662</span></span>
 <span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">nbinom</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pospkg_files/figure-html/negbin-run-show-1.png" width="768"></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="changing-the-prior-distribution">Changing the prior distribution<a class="anchor" aria-label="anchor" href="#changing-the-prior-distribution"></a>
+<h2 id="specifying-the-prior-distribution">Specifying the prior distribution<a class="anchor" aria-label="anchor" href="#specifying-the-prior-distribution"></a>
 </h2>
+<p>The package uses the <a href="https://CRAN.R-project.org/package=distributional" class="external-link">distributional</a>
+package to specify the prior distribution of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+parameter as is mentioned in the documentation in
+<code><a href="../reference/mcmcglm.html">mcmcglm()</a></code>. The <a href="https://CRAN.R-project.org/package=distributional" class="external-link">distributional</a>
+package provides vectorised distribution objects with specified
+parameters with methods for evaluating densities, CDFs, etc. and
+generate random samples from the distribution.</p>
+<p>The use in this package allows the user great flexibility in
+specifying varying independent univariate distributions or multivariate
+distributions for the parameter vector as will be illustrated in the
+examples below.</p>
+<p>In all examples we will simply use a gaussian family of the response
+as in the introductory example in the <a href="https://mathiaslj.github.io/mcmcglm/index.html">README</a> and
+alternate prior specifications.</p>
+<p>Start by defining some data.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">lin_pred</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">dat_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">y_norm</span>, X1 <span class="op">=</span> <span class="va">x1</span>, X2 <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="example-of-iid-priors">Example of iid priors<a class="anchor" aria-label="anchor" href="#example-of-iid-priors"></a>
+</h3>
+<p>In the case of iid priors, a single univariate distribution
+specification is needed:</p>
+<blockquote>
+<p>To make the example not the exact same as the introductory example in
+the README, we show how the posterior distribution is affected by a
+prior with a mean very different from what the data(/likelihood) is
+showing.</p>
+</blockquote>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">iid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>               family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>               data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>               beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>               w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">iid</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/iid-run-show-1.png" width="768"></p>
+<p>Of course, any distribution could be used here using the
+<code>dist_</code> functions of the <a href="https://CRAN.R-project.org/package=distributional" class="external-link">distributional</a>
+package. Here, we simply use a normal distribution with
+<code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">distributional::dist_normal()</a></code>, but it might as well have
+been <code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">distributional::dist_gamma()</a></code>,
+<code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">distributional::dist_student_t()</a></code>, etc. See the <a href="https://pkg.mitchelloharawild.com/distributional/reference/index.html" class="external-link">Reference</a>
+for a full list of distributions.</p>
+</div>
+<div class="section level3">
+<h3 id="example-of-independent-and-potentially-different-priors">Example of independent and potentially different priors<a class="anchor" aria-label="anchor" href="#example-of-independent-and-potentially-different-priors"></a>
+</h3>
+<p>Due to an S3 method implementation in this <a href="https://github.com/mathiaslj/mcmcglm" class="external-link">mcmcglm</a> package, it’s
+possible to specify <code>beta_prior</code> as a list of
+<code>distribution</code> objects. For illustrative purposes, we use the
+distributions mentioned in the above example to specify a different
+prior for each
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+component.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">indep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                 family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>                 data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>                 beta_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                   <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                   <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">dist_gamma</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                   <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_student_t.html" class="external-link">dist_student_t</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fl">8</span>, mu <span class="op">=</span> <span class="fl">3</span>, sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>                 <span class="op">)</span>,</span>
+<span>                 w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">indep</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/indep-run-show-1.png" width="768"></p>
+</div>
+<div class="section level3">
+<h3 id="example-of-multivariate-prior">Example of multivariate prior<a class="anchor" aria-label="anchor" href="#example-of-multivariate-prior"></a>
+</h3>
+<p>The only implemented multivariate distribution is the
+<code><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_multivariate_normal.html" class="external-link">distributional::dist_multivariate_normal()</a></code>, which we can
+use to specify different moments and potential correlation between
+parameters in the model. An example is shown below with a prior
+distribution specified as
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>β</mi><mo>∼</mo><msub><mi>𝒩</mi><mn>3</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>3</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0.2</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+\beta\sim \mathcal{N}_3\left(
+\begin{pmatrix}
+1\\2\\3
+\end{pmatrix},
+\begin{bmatrix}
+1 &amp; 0.5 &amp; 0.2\\
+0.5 &amp; 1 &amp; 0.5\\
+0.2 &amp; 0.5 &amp; 1
+\end{bmatrix}
+\right)
+\end{align}</annotation></semantics></math></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mult</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_multivariate_normal.html" class="external-link">dist_multivariate_normal</a></span><span class="op">(</span></span>
+<span>                  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>,</span>
+<span>                  sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>                    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
+<span>                      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                      ncol <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                      byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>                <span class="op">)</span>,</span>
+<span>                w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">mult</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/mult-run-show-1.png" width="768"></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="tuning-and-changing-the-slice-sampler-procedure">Tuning (and changing) the slice sampler procedure<a class="anchor" aria-label="anchor" href="#tuning-and-changing-the-slice-sampler-procedure"></a>
 </h2>
+<p>The sampling procedure in the package uses the compute graph gibbs
+(CGGibbs) sampler as introduced in <a href="https://arxiv.org/abs/2410.03630" class="external-link">Luu et al. 2024</a>. This is
+done to efficiently “update” the linear predictor after each gibbs
+update of a single component of the parameter vector rather than naively
+recalculating the linear predictor using all terms. The linear predictor
+is then used to calculate the log-likelihood, which is summed with the
+log-density of the prior distribution to obtain the log-potential, being
+the log-posterior up to a normalising constant.</p>
+<p>This method is combined with slice sampling, which enables us to use
+any combination of family of the response and prior distribution of the
+parameters as we do not rely on conjugacy to get closed-form
+distributions to sample from. Further, the method avoids spending
+computational power on numerical integration to find the normalising
+constant corresponding to the marginal distribution of data as the
+sampling procedure needs only know the posterior up to proportionality;
+the reason we use the log-potential.</p>
+<p>The default method of slice sampling is with “stepping-out” and
+“shrinkage” as described in <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full" class="external-link">Neal
+2003</a>.</p>
+<div class="section level3">
+<h3 id="using-the-default-slice-sampling-method">Using the default slice sampling method<a class="anchor" aria-label="anchor" href="#using-the-default-slice-sampling-method"></a>
+</h3>
+<p>All <code>slice_</code> functions from the <a href="https://CRAN.R-project.org/package=qslice" class="external-link">qslice</a> package have
+arguments <code>x</code> and <code>log_target</code>. The
+<code>mcmcglm</code> function finds these entities as a new component of
+the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+vector in any given iteration and as the log-potential evaluated as a
+function of this new value of the parameter.</p>
+<p>Thus, the task left to the user is to specify tuning parameters of
+the chosen algorithm, which is passed through <code>...</code> in
+<code><a href="../reference/mcmcglm.html">mcmcglm()</a></code>. The default slice sampler uses the
+<code><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">qslice::slice_stepping_out()</a></code> function, which has a
+mandatory non-default argument <code>w</code> with the slice width of
+the algorithm. Thus, as readers might have noticed in other examples
+within this vignette or the <a href="https://mathiaslj.github.io/mcmcglm/index.html">README</a>, a
+specification of <code>w = x</code> is given in the calls to
+<code><a href="../reference/mcmcglm.html">mcmcglm()</a></code>. Example below for completeness:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="changing-the-default-slice-sampling-method">Changing the default slice sampling method<a class="anchor" aria-label="anchor" href="#changing-the-default-slice-sampling-method"></a>
+</h3>
+<p>The argument <code>qslice_fun</code> in the <code><a href="../reference/mcmcglm.html">mcmcglm()</a></code>
+function allows the user to change the default slice sampler
+<code><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">qslice::slice_stepping_out()</a></code> to any slice sampler from the
+<code>qslice</code> package. Thus, below is an example of using
+<code><a href="https://rdrr.io/pkg/qslice/man/slice_elliptical.html" class="external-link">qslice::slice_elliptical()</a></code> from <a href="https://proceedings.mlr.press/v9/murray10a" class="external-link">Murray et
+al. (2010)</a>, which has tuning parameters <code>mu</code> and
+<code>sigma</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">el</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                qslice_fun <span class="op">=</span> <span class="fu">qslice</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/qslice/man/slice_elliptical.html" class="external-link">slice_elliptical</a></span>,</span>
+<span>                mu <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                sigma <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">el</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/slice-elliptical-1.png" width="768"></p>
+</div>
+<div class="section level3">
+<h3 id="investigating-effect-of-tuning-parameters-of-slice-sampler">Investigating effect of tuning parameters of slice sampler<a class="anchor" aria-label="anchor" href="#investigating-effect-of-tuning-parameters-of-slice-sampler"></a>
+</h3>
+<p>The utility functions <code><a href="../reference/mcmcglm_across_tuningparams.html">mcmcglm_across_tuningparams()</a></code> and
+<code><a href="../reference/plot_mcmcglm_across_tuningparams.html">plot_mcmcglm_across_tuningparams()</a></code> can be used to create
+trace plots of the samples from running the algorithm with different
+values of tuning parameters.</p>
+<div class="section level4">
+<h4 id="varying-slice-width-for-the-default-slice-sampler">Varying slice width for the default slice sampler<a class="anchor" aria-label="anchor" href="#varying-slice-width-for-the-default-slice-sampler"></a>
+</h4>
+<p>Fx. for the default choice of slice sampler,
+<code><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">qslice::slice_stepping_out()</a></code>, the tuning parameter is the
+slice width <code>w</code>. A way to create a plot of samples across
+different values of the slice width is seen below:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">w05_mcmcglms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm_across_tuningparams.html">mcmcglm_across_tuningparams</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">0.5</span>, by <span class="op">=</span> <span class="fl">0.5</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>  tuning_parameter_name <span class="op">=</span> <span class="st">"w"</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>  family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">dat_norm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot_mcmcglm_across_tuningparams.html">plot_mcmcglm_across_tuningparams</a></span><span class="op">(</span><span class="va">w05_mcmcglms</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/vary-w-1.png" width="768"></p>
+</div>
+<div class="section level4">
+<h4 id="varying-degrees-of-freedom-in-a-generalized-elliptical-slice-sampler">Varying degrees of freedom in a generalized elliptical slice
+sampler<a class="anchor" aria-label="anchor" href="#varying-degrees-of-freedom-in-a-generalized-elliptical-slice-sampler"></a>
+</h4>
+<p>Since the utility function work generally for any single tuning
+parameter, below is an example of <code><a href="https://rdrr.io/pkg/qslice/man/slice_elliptical.html" class="external-link">qslice::slice_elliptical</a></code>
+sampling procedure described in <a href="https://jmlr.org/papers/v15/nishihara14a.html" class="external-link">Nishihara et
+al. (2014)</a>, varying the <code>df</code> parameter in the
+algorithm.</p>
+<blockquote>
+<p>Note that only a single tuning parameter can be “varied” at a time.
+So in the below example, we have to keep <code>sigma</code> and
+<code>mu</code> constant, while we vary over <code>df</code></p>
+</blockquote>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df1_mcmcglms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm_across_tuningparams.html">mcmcglm_across_tuningparams</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">10</span>, length.out <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  tuning_parameter_name <span class="op">=</span> <span class="st">"df"</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>  family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>  qslice_fun <span class="op">=</span> <span class="fu">qslice</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/qslice/man/slice_genelliptical.html" class="external-link">slice_genelliptical</a></span>,</span>
+<span>  mu <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot_mcmcglm_across_tuningparams.html">plot_mcmcglm_across_tuningparams</a></span><span class="op">(</span><span class="va">df1_mcmcglms</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/vary-df-1.png" width="768"></p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="normal-normal-sample-method">Normal-normal sample method<a class="anchor" aria-label="anchor" href="#normal-normal-sample-method"></a>
+</h3>
+<p>Mostly for testing purposes, the package has an implementation of
+sampling from a closed-form normal distribution in the case where both
+the response and prior are normally distributed. Running this requires
+specifying <code>"normal-normal"</code> in the argument
+<code>sample_method</code> in <code><a href="../reference/mcmcglm.html">mcmcglm()</a></code> as seen in the
+example below:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">norm_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                sample_method <span class="op">=</span> <span class="st">"normal-normal"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">norm_norm</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pospkg_files/figure-html/normal-normal-1.png" width="768"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
