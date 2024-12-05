@@ -35,7 +35,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/introduction.html">introduction</a></li>
+<li><a class="dropdown-item" href="articles/customising.html">Customising functionalities</a></li>
+    <li><a class="dropdown-item" href="articles/pospkg.html">Possibilities of package</a></li>
   </ul>
 </li>
       </ul>
@@ -57,17 +58,76 @@
 <!-- badges: start -->
 <!-- badges: end -->
 <p>The mcmcglm package implements the CGGibbs sampler from the article <a href="https://arxiv.org/abs/2410.03630" class="external-link">Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?</a>, which has linear run time as a function of number of parameters in a GLM model due to a clever “update” of the linear predictor.</p>
-<p>The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> parameter, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)</annotation></semantics></math> for a link function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math> specified by the family.</p>
+<p>The package is implemented in a way that the user can specify any family of the response and any distribution for the prior of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> parameter, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}[Y|X\beta]=g^{-1}(X\beta)</annotation></semantics></math> for a link function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math> specified by the family. See more in <code><a href="articles/pospkg.html">vignette("pospkg")</a></code>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Installation available from <a href="">GitHub</a> with:</p>
+<p>Installation available from <a href="https://github.com/mathiaslj/mcmcglm" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mathiaslj/mcmcglm"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mathiaslj/mcmcglm" class="external-link">mcmcglm</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
+<p>We first simulate some data from a linear model to use for showcasing the use of <code>mcmcglm</code> for a gaussian family.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span> <span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span> <span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="va">b0</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">1.5</span></span>
+<span><span class="va">b2</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">lin_pred</span> <span class="op">&lt;-</span> <span class="va">b0</span><span class="op">+</span><span class="va">b1</span><span class="op">*</span><span class="va">x1</span><span class="op">+</span><span class="va">b2</span><span class="op">*</span><span class="va">x2</span></span>
+<span></span>
+<span><span class="va">y_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">lin_pred</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">dat_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">y_norm</span>, X1 <span class="op">=</span> <span class="va">x1</span>, X2 <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
+<p>The use of the function <code>mcmcglm</code> is then similar in interface to the <code>glm</code> function but with an added mandatory specification of</p>
+<ul>
+<li>the prior of the parameter <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+</li>
+<li>a tuning parameter for the slice sampling procedure specified by the <code>qslice_fun</code> argument.
+<ul>
+<li>The default is the <code><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">qslice::slice_stepping_out</a></code> function, which performs slice sampling as described in <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full" class="external-link">Neal 2003</a> for which a slice width <code>w</code> needs to be specified.</li>
+</ul>
+</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>                beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<p>This creates an <code>mcmcglm</code> object which prints as</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">norm</span></span>
+<span><span class="co">#&gt; Object of class 'mcmcglm'</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:  mcmcglm(formula = Y ~ ., family = "gaussian", data = dat_norm, </span></span>
+<span><span class="co">#&gt;     beta_prior = distributional::dist_normal(0, 1), w = 0.5)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average of parameter samples:</span></span>
+<span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
+<span><span class="co">#&gt; 1    1.154711 1.495975 1.704673</span></span></code></pre></div>
+<p>summarising the call of the function with averages of the samples of each parameter in the GLM model.</p>
+<div class="section level3">
+<h3 id="investigating-results">Investigating results<a class="anchor" aria-label="anchor" href="#investigating-results"></a>
+</h3>
+<p>The full data set of samples can be accessed with the <code>samples</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/samples.html">samples</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   (Intercept)         X1        X2 iteration burnin</span></span>
+<span><span class="co">#&gt; 1  -0.3566355 -0.6567774 -1.911033         0   TRUE</span></span>
+<span><span class="co">#&gt; 2  -0.0407047  1.7918987  6.312742         1   TRUE</span></span>
+<span><span class="co">#&gt; 3  -1.5444480  1.9038014  5.500643         2   TRUE</span></span>
+<span><span class="co">#&gt; 4  -1.2251190  1.5762099  4.836526         3   TRUE</span></span>
+<span><span class="co">#&gt; 5  -0.8322131  1.5943287  4.019490         4   TRUE</span></span>
+<span><span class="co">#&gt; 6  -0.2479394  1.6440873  2.273112         5   TRUE</span></span></code></pre></div>
+<p>A trace plot can be seen with the function <code>trace_plot</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-gaussian-trace-1.png" width="100%"></p>
 <!-- ## Example -->
 <!-- This is a basic example which shows you how to solve a common problem: -->
 <!-- ```{r example} -->
@@ -84,6 +144,7 @@
 <!-- plot(pressure) -->
 <!-- ``` -->
 <!-- In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN. -->
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
