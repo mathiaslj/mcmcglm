@@ -1,8 +1,8 @@
 ---
-title: "Possibilities of package"
+title: "Examples of family, prior and slice sampler specifications"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Possibilities of package}
+  %\VignetteIndexEntry{Examples of family, prior and slice sampler specifications}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

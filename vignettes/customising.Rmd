@@ -1,8 +1,8 @@
 ---
-title: "Customising functionalities"
+title: "Adding methods for families"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Customising functionalities}
+  %\VignetteIndexEntry{Adding methods for families}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
