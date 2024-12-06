@@ -10,6 +10,7 @@ mcmcglm(
   data,
   beta_prior = distributional::dist_normal(0, 1),
   log_likelihood_extra_args = list(sd = 1),
+  linear_predictor_calc = c("update", "naive"),
   sample_method = c("slice_sampling", "normal-normal"),
   qslice_fun = qslice::slice_stepping_out,
   ...,
@@ -35,6 +36,11 @@ from \code{environment(formula)}, typically the environment from which the funct
 \item{log_likelihood_extra_args}{a named \code{list} with arguments passed onto the \link{log_density} function.
 Fx. specification of \code{log_likelihood_extra_args = list(sd = x)} is needed for the case of
 \code{family = "gaussian"}}
+
+\item{linear_predictor_calc}{a \code{character} specifying the method used to calculate the
+linear predictor in each step of the gibbs algorithm. Default is "update", which uses
+the CGGibbs procedure as described at the start of
+\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#tuning-and-changing-the-slice-sampler-procedure}{this section in a vignette}}
 
 \item{sample_method}{a \code{character} specifying the method used for sampling. The default \code{"slice_sampling"}
 is the intended value in most cases, as it works for any specification of \code{family} and \code{beta_prior}.

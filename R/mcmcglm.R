@@ -20,6 +20,11 @@
 #' @param log_likelihood_extra_args a named `list` with arguments passed onto the [log_density] function.
 #' Fx. specification of `log_likelihood_extra_args = list(sd = x)` is needed for the case of
 #' `family = "gaussian"`
+#' @param linear_predictor_calc a `character` specifying the method used to calculate the
+#' linear predictor in each step of the gibbs algorithm. Default is "update", which uses
+#' the CGGibbs procedure as described at the start of
+#' [this section in a vignette](https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#advantage-of-cggibbs).
+#' Other option is "naive", which does the usual
 #' @param n_samples a `numeric` with number of samples to draw of each parameter(/variable) in the model
 #' @param burnin a `numeric` with the number of samples to be marked as "burnin". Burnin samples are not
 #' included in the `beta_mean` calculation to increase finite sample performance of the LLN estimate
@@ -142,6 +147,7 @@ mcmcglm <- function(formula,
                     data,
                     beta_prior = distributional::dist_normal(0, 1),
                     log_likelihood_extra_args = list(sd = 1),
+                    linear_predictor_calc = c("update", "naive"),
                     sample_method = c("slice_sampling", "normal-normal"),
                     qslice_fun = qslice::slice_stepping_out,
                     ...,
@@ -149,6 +155,8 @@ mcmcglm <- function(formula,
                     burnin = 100) {
 
   call <- match.call()
+
+  linear_predictor_calc <- match.arg(linear_predictor_calc)
 
   sample_method <- match.arg(sample_method)
 
@@ -228,10 +236,11 @@ mcmcglm <- function(formula,
                  j = j,
                  current_beta = param_list[[k]]$beta,
                  current_eta = param_list[[k]]$eta,
-                 X_j = X[, j],
+                 X = X,
                  family = family,
                  Y = Y,
-                 beta_prior = beta_prior),
+                 beta_prior = beta_prior,
+                 linear_predictor_calc = linear_predictor_calc),
             log_likelihood_extra_args
           )
 

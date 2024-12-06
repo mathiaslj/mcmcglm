@@ -121,6 +121,7 @@ log_prior_density.list <- function(beta_prior, x) {
 #'
 #' @inheritParams log_potential_from_betaj
 #'
+#' @param X_j the j'th column of the design matrix
 #' @param current_beta_j the `numeric` current value of the j'th component of the beta parameter vector
 update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j) {
   diff_beta <- new_beta_j - current_beta_j
@@ -141,7 +142,7 @@ update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j)
 #' @inheritParams mcmcglm
 #'
 #' @param new_beta_j a `numeric` new value of the j'th component of the beta parameter vector
-#' @param X_j the j'th column in the design matrix
+#' @param X the design matrix
 #' @param j a `numeric` with the index of the parameter vector
 #' @param current_beta the current value of the beta parameter vector in the sampling procedure
 #' @param current_eta the current value of the linear predictor corresponding to the `current_beta` value
@@ -179,29 +180,36 @@ update_linear_predictor = function(new_beta_j, current_beta_j, current_eta, X_j)
 #'                          j = j, current_beta = b_prior_init,
 #'                          current_eta = eta_init,
 #'                          Y = y_norm,
-#'                          X_j = model_matrix_norm[, j],
+#'                          X = model_matrix_norm,
 #'                          family = gaussian,
 #'                          beta_prior = b_prior,
 #'                          sd = known_sigma)
 log_potential_from_betaj <- function(new_beta_j, j,
                                      current_beta,
                                      current_eta,
-                                     Y, X_j, family,
+                                     Y, X, family,
                                      beta_prior,
+                                     linear_predictor_calc = "update",
                                      ...) {
   family <- check_family(family)
   current_beta_j <- current_beta[[j]]
 
-  new_eta <- update_linear_predictor(new_beta_j,
+  new_beta <- current_beta
+  new_beta[j] <- new_beta_j
+
+  if (linear_predictor_calc == "update") {
+    new_eta <- update_linear_predictor(new_beta_j,
                                      current_beta_j = current_beta_j,
                                      current_eta = current_eta,
-                                     X_j = X_j)
+                                     X_j = X[, j])
+  }
+  if (linear_predictor_calc == "naive") {
+    new_eta <- X %*% new_beta
+  }
+
   new_mu <- family$linkinv(new_eta)
 
   ll <- log_likelihood(family = family, mu = new_mu, Y = Y, ...)
-
-  new_beta <- current_beta
-  new_beta[j] <- new_beta_j
 
   log_prior_density_val <- log_prior_density(beta_prior = beta_prior,
                                              x = new_beta)

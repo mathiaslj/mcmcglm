@@ -10,9 +10,10 @@ log_potential_from_betaj(
   current_beta,
   current_eta,
   Y,
-  X_j,
+  X,
   family,
   beta_prior,
+  linear_predictor_calc = "update",
   ...
 )
 }
@@ -27,7 +28,7 @@ log_potential_from_betaj(
 
 \item{Y}{a \verb{numeric vector} of the response variable in which to evaluate the density}
 
-\item{X_j}{the j'th column in the design matrix}
+\item{X}{the design matrix}
 
 \item{family}{a description of the error distribution and link function to be used in the model.
 This can be a \code{character} string naming a family function, a family function or the result
@@ -35,6 +36,11 @@ of a call to a family function. (See \link{family} for details of family functio
 
 \item{beta_prior}{a \code{distribution} object created by a function from the
 \code{\link{distributional}} package. Could fx. be \code{distributional::dist_normal(mean = 0, sd = 1)}.}
+
+\item{linear_predictor_calc}{a \code{character} specifying the method used to calculate the
+linear predictor in each step of the gibbs algorithm. Default is "update", which uses
+the CGGibbs procedure as described at the start of
+\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#tuning-and-changing-the-slice-sampler-procedure}{this section in a vignette}}
 
 \item{...}{arguments passed on to the S3 generic \link{log_density}}
 }
@@ -75,7 +81,7 @@ log_potential_from_betaj(new_beta_j = new_beta_j,
                          j = j, current_beta = b_prior_init,
                          current_eta = eta_init,
                          Y = y_norm,
-                         X_j = model_matrix_norm[, j],
+                         X = model_matrix_norm,
                          family = gaussian,
                          beta_prior = b_prior,
                          sd = known_sigma)

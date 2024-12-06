@@ -13,7 +13,7 @@ update_linear_predictor(new_beta_j, current_beta_j, current_eta, X_j)
 
 \item{current_eta}{the current value of the linear predictor corresponding to the \code{current_beta} value}
 
-\item{X_j}{the j'th column in the design matrix}
+\item{X_j}{the j'th column of the design matrix}
 }
 \description{
 Function for updating the linear predictor with n actions rather than n\emph{n_vars actions
