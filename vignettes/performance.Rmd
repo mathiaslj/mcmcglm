@@ -26,8 +26,8 @@ withr::local_seed(42)
 ### Using default slice function
 ```{r run-compare-nvars}
 res <- compare_eta_comptime_across_nvars(
-  n_vars = c(2, seq(from = 10, to = 50, by = 10)),
-  n_samples = 50,
+  n_vars = c(2, seq(from = 50, to = 100, by = 50)),
+  n_samples = 10,
   burnin = 1,
   w = 0.5,
   parallelise = TRUE)

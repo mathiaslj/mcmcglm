@@ -5,7 +5,7 @@
 #' [vignette](https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#investigating-effect-of-tuning-parameters-of-slice-sampler)
 #'
 #' @inheritParams mcmcglm
-#' @inheritParams compare_eta_comptime_across_nvars # for parallelisation
+#' @inheritParams compare_eta_comptime_across_nvars
 #'
 #' @param ... A `list` or `vector`  with values of the tuning parameter
 #' @param tuning_parameter_name The name of the tuning parameter. Fx. for the default `qslice_fun`
