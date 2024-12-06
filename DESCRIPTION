@@ -23,6 +23,7 @@ Suggests:
     MASS,
     mvtnorm,
     rmarkdown,
+    statmod,
     withr
 VignetteBuilder: 
     knitr
