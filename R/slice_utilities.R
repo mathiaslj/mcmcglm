@@ -1,7 +1,8 @@
 #' Get list of mcmcglms run across values of slice sampling tuning parameters
 #'
 #' The function simply performs an lapply over [mcmcglm] for the values provided of
-#' tuning parameter values.
+#' tuning parameter values. See general usage in the
+#' [vignette](https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#investigating-effect-of-tuning-parameters-of-slice-sampler)
 #'
 #' @inheritParams mcmcglm
 #'
@@ -89,6 +90,9 @@ trace_plot_wtuning <- function(mcmcglm, tuning_parameter_name) {
 
 #' Plot a list of mcmcglms showing varying tuning parameters in the title of the plots
 #'
+#' See decription of [mcmcglm_across_tuningparams] for more details on what this
+#' functionality can be used for
+#'
 #' @param list_mcmcglms A `list` of `mcmcglm` objects. Intended to be the result of
 #' a call to [mcmcglm_across_tuningparams]
 #'
@@ -112,13 +116,11 @@ trace_plot_wtuning <- function(mcmcglm, tuning_parameter_name) {
 #' dat_norm <- data.frame(Y = y_norm, X1 = x1, X2 = x2)
 #'
 #' w05_mcmcglms <- mcmcglm_across_tuningparams(
-#'    seq(from = 0.5, by = 0.5, length.out = 9),
+#'    seq(from = 0.5, by = 0.5, length.out = 4),
 #'    tuning_parameter_name = "w",
 #'    formula = Y ~ .,
 #'    family = "gaussian",
-#'    data = dat_norm,
-#'    n_samples = 10,
-#'    burnin = 0
+#'    data = dat_norm
 #' )
 #'
 #' plot_mcmcglm_across_tuningparams(w05_mcmcglms)
