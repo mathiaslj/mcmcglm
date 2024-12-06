@@ -52,8 +52,10 @@ log_density.inverse.gaussian <- function(family, mu, Y, ...) {
 }
 ```
 
+where `mu` is the modelled mean $\mu=g^{-1}(X\beta)$ in the GLM model, and `Y` is the response variable.
+
 Then, `mcmcglm()` can be called like so:
-```{r, eval = FALSE}
+```{r invgauss-run-show}
 invnorm <- mcmcglm::mcmcglm(formula = Y ~ .,
                             family = inverse.gaussian(),
                             log_likelihood_extra_args = list(shape = 1, dispersion = 1),
