@@ -43,14 +43,14 @@ trace_plot.mcmcglm <- function(x, samples_drop = NULL) {
   plot_data <- tidyr::pivot_longer(
     data_removed_samples,
     cols = 1:ncol(x$model_matrix),
-    names_to = "var_name",
+    names_to = "Var",
     values_to = "beta_sample"
   )
 
   ggplot2::ggplot(data = plot_data,
                   ggplot2::aes(x = iteration, y = beta_sample, col = burnin)) +
     ggplot2::geom_line() +
-    ggplot2::facet_wrap("var_name",
+    ggplot2::facet_wrap("Var",
                         labeller = "label_both",
                         scales = "free") +
     ggplot2::theme_bw()
