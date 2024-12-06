@@ -33,13 +33,13 @@ devtools::install_github("mathiaslj/mcmcglm")
 
 ```{r, setup, include = FALSE}
 library(mcmcglm, warn.conflicts = FALSE)
-withr::local_options(list(cli.progress_show_after = 300))
+withr::local_options(list(cli.progress_show_after = 1e6))
 withr::local_seed(42)
 ```
 
 ## Example
  
-We first simulate some data from a linear model to use for showcasing the use of `mcmcglm` for a gaussian family.
+We first simulate some data from a linear model to use for showcasing the use of `mcmcglm` for a gaussian family. 
 ```{r, label = data-generation}
 n <- 100
 x1 <- rnorm (n)

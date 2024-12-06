@@ -16,6 +16,7 @@ comment = "#>"
 
 ```{r setup, include = FALSE}
 library(mcmcglm)
+withr::local_options(list(cli.progress_show_after = 1e6))
 withr::local_seed(42)
 ```
 
