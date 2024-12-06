@@ -137,7 +137,6 @@ compare_eta_comptime_across_nvars <- function(n_vars,
       },
       future.seed = TRUE)
     future::plan(future::sequential)
-    return(out)
   } else {
     comptime_nvars <- lapply(n_vars, function(n_vars) {
       do.call(generate_and_compare_eta_comptime,
