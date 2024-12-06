@@ -61,6 +61,7 @@ and see more in details below.</p>
 <span>  <span class="va">data</span>,</span>
 <span>  beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  log_likelihood_extra_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  linear_predictor_calc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"update"</span>, <span class="st">"naive"</span><span class="op">)</span>,</span>
 <span>  sample_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slice_sampling"</span>, <span class="st">"normal-normal"</span><span class="op">)</span>,</span>
 <span>  qslice_fun <span class="op">=</span> <span class="fu">qslice</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">slice_stepping_out</a></span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -99,6 +100,13 @@ from <code>environment(formula)</code>, typically the environment from which the
 <dd><p>a named <code>list</code> with arguments passed onto the <a href="log_density.html">log_density</a> function.
 Fx. specification of <code>log_likelihood_extra_args = list(sd = x)</code> is needed for the case of
 <code>family = "gaussian"</code></p></dd>
+
+
+<dt id="arg-linear-predictor-calc">linear_predictor_calc<a class="anchor" aria-label="anchor" href="#arg-linear-predictor-calc"></a></dt>
+<dd><p>a <code>character</code> specifying the method used to calculate the
+linear predictor in each step of the gibbs algorithm. Default is "update", which uses
+the CGGibbs procedure as described at the start of
+<a href="https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#tuning-and-changing-the-slice-sampler-procedure">this section in a vignette</a></p></dd>
 
 
 <dt id="arg-sample-method">sample_method<a class="anchor" aria-label="anchor" href="#arg-sample-method"></a></dt>

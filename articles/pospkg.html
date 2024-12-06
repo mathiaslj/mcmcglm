@@ -380,25 +380,70 @@ distribution specified as
 <div class="section level2">
 <h2 id="tuning-and-changing-the-slice-sampler-procedure">Tuning (and changing) the slice sampler procedure<a class="anchor" aria-label="anchor" href="#tuning-and-changing-the-slice-sampler-procedure"></a>
 </h2>
-<p>The sampling procedure in the package uses the compute graph gibbs
-(CGGibbs) sampler as introduced in <a href="https://arxiv.org/abs/2410.03630" class="external-link">Luu et al. 2024</a>. This is
+<p>The sampling procedure in the package uses the <strong>compute graph
+gibbs (CGGibbs)</strong> sampler as introduced in <a href="https://arxiv.org/abs/2410.03630" class="external-link">Luu et al. 2024</a>. This is
 done to efficiently “update” the linear predictor after each gibbs
 update of a single component of the parameter vector rather than naively
-recalculating the linear predictor using all terms. The linear predictor
-is then used to calculate the log-likelihood, which is summed with the
-log-density of the prior distribution to obtain the log-potential, being
-the log-posterior up to a normalising constant.</p>
-<p>This method is combined with slice sampling, which enables us to use
-any combination of family of the response and prior distribution of the
-parameters as we do not rely on conjugacy to get closed-form
-distributions to sample from. Further, the method avoids spending
-computational power on numerical integration to find the normalising
-constant corresponding to the marginal distribution of data as the
-sampling procedure needs only know the posterior up to proportionality;
-the reason we use the log-potential.</p>
+recalculating the linear predictor using all terms.</p>
+<div class="section level3">
+<h3 id="advantage-of-cggibbs">Advantage of CGGibbs<a class="anchor" aria-label="anchor" href="#advantage-of-cggibbs"></a>
+</h3>
+<p>See more details in the article, but we’ll quickly show the simple
+and elegant idea here. Assuming that in the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>’th
+iteration (out of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>
+total iterations) we have sampled a new
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>’th
+coordinate of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>-dimensional
+parameter vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>β</mi><mi>j</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\beta_j^{(k)}</annotation></semantics></math>,
+the “current” value is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msubsup><mi>β</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>β</mi><mn>1</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>,</mo><msubsup><mi>β</mi><mn>2</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msubsup><mi>β</mi><mi>j</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>,</mo><msubsup><mi>β</mi><mrow><mi>j</mi><mo>+</mo><mn>1</mn></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msubsup><mi>β</mi><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+\beta_{(j)}^{(k)}=\left(\beta_1^{(k)}, \beta_2^{(k)}, ..., \beta_j^{(k)}, \beta_{j+1}^{(k-1)}, ..., \beta_{d}^{(k-1)}\right)
+\end{align}</annotation></semantics></math></p>
+<p>The CGGibbs approach to calculate the linear predictor in the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>’th
+iteration for component
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\eta_{(j)}^{(k)}</annotation></semantics></math>,
+is then <span class="math display">$$\begin{align}
+  \eta_{(j)}^{(k)}=\eta_{(j-1)}^{(k)}+\sum_{i=1}^n x_{ij}
+(\beta_j^{(k)}-\beta_j^{(k-1)})}
+\end{align}$$</span></p>
+<p>while the naive approach is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msubsup><mi>η</mi><mi>j</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><munderover><mo>∑</mo><mrow><mi>l</mi><mo>=</mo><mn>1</mn></mrow><mi>d</mi></munderover><msub><mi>x</mi><mrow><mi>i</mi><mi>l</mi></mrow></msub><msubsup><mi>β</mi><mi>l</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>𝟏</mn><mrow><mo stretchy="true" form="prefix">[</mo><mi>j</mi><mo>&gt;</mo><mi>l</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></msubsup></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+  \eta_j^{(k)}=\sum_{i=1}^n\sum_{l=1}^d x_{il} \beta_l^{(k-\mathbf{1}[j&gt;l])}
+\end{align}</annotation></semantics></math></p>
+<p>This means that using CGGibbs, for any component update of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>,
+the computation time is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math>,
+compared to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>d</mi><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">O(dn)</annotation></semantics></math>
+for the naive approach.</p>
+</div>
+<div class="section level3">
+<h3 id="advantages-of-slice-sampling-in-combination-with-cggibbs">Advantages of slice sampling (in combination with CGGibbs)<a class="anchor" aria-label="anchor" href="#advantages-of-slice-sampling-in-combination-with-cggibbs"></a>
+</h3>
+<p>The linear predictor is used to calculate the log-likelihood, which
+is summed with the log-density of the prior distribution to obtain the
+log-potential, being the log-posterior up to a normalising constant. The
+log-potential is calculated in this algorithm in order to use slice
+sampling, which enables us to use any combination of family of the
+response and prior distribution of the parameters as we do not rely on
+conjugacy to get closed-form distributions to sample from.</p>
+<p>Further, the slice sampling avoids spending computational power on
+numerical integration to find the normalising constant corresponding to
+the marginal distribution of data as the sampling procedure needs only
+know the posterior up to proportionality; the reason we use the
+log-potential.</p>
 <p>The default method of slice sampling is with “stepping-out” and
 “shrinkage” as described in <a href="https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full" class="external-link">Neal
 2003</a>.</p>
+</div>
 <div class="section level3">
 <h3 id="using-the-default-slice-sampling-method">Using the default slice sampling method<a class="anchor" aria-label="anchor" href="#using-the-default-slice-sampling-method"></a>
 </h3>
