@@ -101,6 +101,9 @@ density of an inverse gaussian distribution like so:</p>
 <code class="sourceCode R"><span><span class="va">log_density.inverse.gaussian</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">family</span>, <span class="va">mu</span>, <span class="va">Y</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">statmod</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/statmod/man/invgauss.html" class="external-link">dinvgauss</a></span><span class="op">(</span><span class="va">Y</span>, mean <span class="op">=</span> <span class="va">mu</span>, <span class="va">...</span>, log <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<p>where <code>mu</code> is the modelled mean
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu=g^{-1}(X\beta)</annotation></semantics></math>
+in the GLM model, and <code>Y</code> is the response variable.</p>
 <p>Then, <code><a href="../reference/mcmcglm.html">mcmcglm()</a></code> can be called like so:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">invnorm</span> <span class="op">&lt;-</span> <span class="fu">mcmcglm</span><span class="fu">::</span><span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
@@ -109,7 +112,11 @@ density of an inverse gaussian distribution like so:</p>
 <span>                            data <span class="op">=</span> <span class="va">dat_invnorm</span>,</span>
 <span>                            beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">dist_gamma</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                            w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  2s</span></span>
+<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA:  1s</span></span>
+<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
 <span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">invnorm</span><span class="op">)</span></span></code></pre></div>
+<p><img src="customising_files/figure-html/invgauss-run-show-1.png" width="700"></p>
 <p>where we specify <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">inverse.gaussian()</a></code> as the
 <code>family</code> argument, and we make sure to add the additional
 arguments to this density through the
