@@ -12,7 +12,8 @@ The mcmcglm package implements the CGGibbs sampler from the article [Is
 Gibbs sampling faster than Hamiltonian Monte Carlo on
 GLMs?](https://arxiv.org/abs/2410.03630), which has linear run time as a
 function of number of parameters in a GLM model due to a clever “update”
-of the linear predictor.
+of the linear predictor. See more details at [this section in a
+vignette](https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#advantage-of-cggibbs)
 
 The package is implemented in a way that the user can specify any family
 of the response and any distribution for the prior of the $\beta$
