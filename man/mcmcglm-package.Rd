@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Mathias Lerbech Jeppesen \email{mathiasljeppesen@outlook.com}
 
+Authors:
+\itemize{
+  \item Julie Køhler Munkvad \email{julie.m@hotmail.dk}
+}
+
 }
 \keyword{internal}
