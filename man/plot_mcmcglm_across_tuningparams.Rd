@@ -11,7 +11,8 @@ plot_mcmcglm_across_tuningparams(list_mcmcglms)
 a call to \link{mcmcglm_across_tuningparams}}
 }
 \description{
-Plot a list of mcmcglms showing varying tuning parameters in the title of the plots
+See decription of \link{mcmcglm_across_tuningparams} for more details on what this
+functionality can be used for
 }
 \examples{
 # Create test data for different scenarios
@@ -31,13 +32,11 @@ y_norm <- rnorm(n, mean = lin_pred, sd = 1)
 dat_norm <- data.frame(Y = y_norm, X1 = x1, X2 = x2)
 
 w05_mcmcglms <- mcmcglm_across_tuningparams(
-   seq(from = 0.5, by = 0.5, length.out = 9),
+   seq(from = 0.5, by = 0.5, length.out = 4),
    tuning_parameter_name = "w",
    formula = Y ~ .,
    family = "gaussian",
-   data = dat_norm,
-   n_samples = 10,
-   burnin = 0
+   data = dat_norm
 )
 
 plot_mcmcglm_across_tuningparams(w05_mcmcglms)

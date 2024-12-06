@@ -60,7 +60,8 @@ included in the \code{beta_mean} calculation to increase finite sample performan
 }
 \description{
 The function simply performs an lapply over \link{mcmcglm} for the values provided of
-tuning parameter values.
+tuning parameter values. See general usage in the
+\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#investigating-effect-of-tuning-parameters-of-slice-sampler}{vignette}
 }
 \examples{
 # Create test data for different scenarios
