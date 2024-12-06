@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Customising functionalities • mcmcglm</title>
+<title>Adding methods for families • mcmcglm</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Customising functionalities">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Adding methods for families">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,8 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/pospkg.html">Possibilities of package</a></li>
-    <li><a class="dropdown-item" href="../articles/customising.html">Customising functionalities</a></li>
+<li><a class="dropdown-item" href="../articles/pospkg.html">Examples of family, prior and slice sampler specifications</a></li>
+    <li><a class="dropdown-item" href="../articles/customising.html">Adding methods for families</a></li>
   </ul>
 </li>
       </ul>
@@ -56,7 +56,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Customising functionalities</h1>
+      <h1>Adding methods for families</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/mathiaslj/mcmcglm/blob/main/vignettes/customising.Rmd" class="external-link"><code>vignettes/customising.Rmd</code></a></small>
@@ -68,27 +68,53 @@
 <div class="section level2">
 <h2 id="adding-methods-for-new-families">Adding methods for new families<a class="anchor" aria-label="anchor" href="#adding-methods-for-new-families"></a>
 </h2>
-<p>the only missing piece for any other families is a method for
-calculating the log-density of the distribution, which has been made
-very easily</p>
-<p>Fx. for inverse gaussian distribution add the method</p>
+<p>It is very, very easy to extend the package to include a family that
+is not existing in the package. The only missing piece for any other
+families is a method for calculating the log-density of the
+distribution.</p>
+<p>Since the calculation of the log-density for a family is implemented
+using S3 methods, all the user needs to do is define a function called
+<code>log_density.*family_name*</code> with <em>family_name</em>
+specified as the relevant family.</p>
+<p>Below is an example showcasing the single line of code a user needs
+to write to enable the use of an inverse gaussian family</p>
+<div class="section level3">
+<h3 id="example-of-implementing-method-for-inverse-gaussian-family">Example of implementing method for inverse gaussian family<a class="anchor" aria-label="anchor" href="#example-of-implementing-method-for-inverse-gaussian-family"></a>
+</h3>
+<p>First, we generate some data to showcase the example.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' @export</span></span>
-<span><span class="va">log_density.inverse.gaussian</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">family</span>, <span class="va">main_parameter</span>, <span class="va">Y</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">statmod</span><span class="fu">::</span><span class="fu">dinvgauss</span><span class="op">(</span><span class="va">Y</span>, mean <span class="op">=</span> <span class="va">main_parameter</span>, <span class="va">...</span>, log <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>and when calling <code>mcmcglm</code> remember to add the additional
-arguments to this density through the
-<code>log_likelihood_extra_args</code> argument in this case by doing
-fx.</p>
+<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="va">b0</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">1.5</span></span>
+<span><span class="va">b2</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">lin_pred</span> <span class="op">&lt;-</span> <span class="va">b0</span><span class="op">+</span><span class="va">b1</span><span class="op">*</span><span class="va">x1</span><span class="op">+</span><span class="va">b2</span><span class="op">*</span><span class="va">x2</span></span>
+<span></span>
+<span><span class="va">invgauss_fam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">inverse.gaussian</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">y_invnorm</span> <span class="op">&lt;-</span> <span class="fu">statmod</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/statmod/man/invgauss.html" class="external-link">rinvgauss</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">invgauss_fam</span><span class="op">$</span><span class="fu">linkinv</span><span class="op">(</span><span class="va">lin_pred</span><span class="op">)</span>,</span>
+<span>                                shape <span class="op">=</span> <span class="fl">1</span>, dispersion <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">dat_invnorm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">y_invnorm</span>, X1 <span class="op">=</span> <span class="va">x1</span>, X2 <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
+<p>All the user needs to do is specify a method for computing the
+density of an inverse gaussian distribution like so:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mcmcglm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">"inverse.gaussian"</span>,</span>
-<span>                   log_density_extra_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">x</span>, dispersion <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
-<span>                   <span class="st">"other arguments"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">log_density.inverse.gaussian</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">family</span>, <span class="va">mu</span>, <span class="va">Y</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">statmod</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/statmod/man/invgauss.html" class="external-link">dinvgauss</a></span><span class="op">(</span><span class="va">Y</span>, mean <span class="op">=</span> <span class="va">mu</span>, <span class="va">...</span>, log <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Then, <code><a href="../reference/mcmcglm.html">mcmcglm()</a></code> can be called like so:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">invnorm</span> <span class="op">&lt;-</span> <span class="fu">mcmcglm</span><span class="fu">::</span><span class="fu"><a href="../reference/mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                            family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">inverse.gaussian</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                            log_likelihood_extra_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fl">1</span>, dispersion <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                            data <span class="op">=</span> <span class="va">dat_invnorm</span>,</span>
+<span>                            beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">dist_gamma</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                            w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">invnorm</span><span class="op">)</span></span></code></pre></div>
+<p>where we specify <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">inverse.gaussian()</a></code> as the
+<code>family</code> argument, and we make sure to add the additional
+arguments to this density through the
+<code>log_likelihood_extra_args</code> argument.</p>
 </div>
-<div class="section level2">
-<h2 id="using-other-samplers">Using other samplers<a class="anchor" aria-label="anchor" href="#using-other-samplers"></a>
-</h2>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
