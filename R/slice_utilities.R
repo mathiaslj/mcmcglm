@@ -5,6 +5,7 @@
 #' [vignette](https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#investigating-effect-of-tuning-parameters-of-slice-sampler)
 #'
 #' @inheritParams mcmcglm
+#' @inheritParams compare_eta_comptime_across_nvars # for parallelisation
 #'
 #' @param ... A `list` or `vector`  with values of the tuning parameter
 #' @param tuning_parameter_name The name of the tuning parameter. Fx. for the default `qslice_fun`
@@ -49,10 +50,12 @@ mcmcglm_across_tuningparams <- function(...,
                                        sample_method = c("slice_sampling", "normal-normal"),
                                        qslice_fun = qslice::slice_stepping_out,
                                        n_samples = 500,
-                                       burnin = 100) {
+                                       burnin = 100,
+                                       parallelise = TRUE,
+                                       n_cores = as.numeric(Sys.getenv('NUMBER_OF_PROCESSORS')) - 1) {
 
   args <- c(as.list(environment()))
-  args_without_tuning <- args[names(args) != "tuning_parameter_name"]
+  args_without_tuning <- args[!names(args) %in% c("tuning_parameter_name", "parallelise", "n_cores")]
 
   tuning_args <- list(...)
   tuning_param_lapply_over <- tuning_args[[1]]
@@ -66,7 +69,17 @@ mcmcglm_across_tuningparams <- function(...,
     do.call(mcmcglm, c(tuning, args_without_tuning))
   }
 
-  out <- lapply(tuning_param_lapply_over, fun_of_tuning_parameter)
+  if (parallelise) {
+    future::plan(future::multisession)
+    out <- future.apply::future_lapply(
+      tuning_param_lapply_over,
+      fun_of_tuning_parameter,
+      future.seed = TRUE)
+    future::plan(future::sequential)
+  } else {
+    out <- lapply(tuning_param_lapply_over, fun_of_tuning_parameter)
+  }
+
   attr(out, "tuning_parameter_name") <- tuning_parameter_name
   return(out)
 }

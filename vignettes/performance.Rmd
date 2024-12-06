@@ -24,22 +24,31 @@ withr::local_seed(42)
 ## Graph of compute time as function of dimension
 
 ### Using default slice function
-```{r run-compare}
-resw05 <- compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 200, to = 1000, by = 200)),
-                                            n_samples = 100,
-                                            burnin = 10,
-                                            w = 0.5)
-
-resw10 <- compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 200, to = 1000, by = 200)),
-                                            n_samples = 100,
-                                            burnin = 10,
-                                            w = 10)
+```{r run-compare-nvars}
+res <- compare_eta_comptime_across_nvars(
+  n_vars = c(2, seq(from = 10, to = 50, by = 10)),
+  n_samples = 50,
+  burnin = 1,
+  w = 0.5,
+  parallelise = TRUE)
 ```
 
 ```{r show-compare}
-dplyr::bind_rows(resw05, resw10) %>% 
-  plot_eta_comptime()
+plot_eta_comptime(res, facet_by = "w")
 ```
 
+Could run over different slice widths if interested
+```{r run-compare_ws, eval = FALSE}
+ws <- c(0.5, 10)
+res <- lapply(ws, function(w) {
+  compare_eta_comptime_across_nvars(
+    w = w,
+    n_vars = c(2, seq(from = 10, to = 50, by = 10)),
+    n_samples = 50,
+    burnin = 1,
+    parallelise = TRUE)
+}) %>% 
+  dplyr::bind_rows()
+```
 
 ## Versus naive computation

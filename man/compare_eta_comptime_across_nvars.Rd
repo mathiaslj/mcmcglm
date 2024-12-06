@@ -13,7 +13,9 @@ compare_eta_comptime_across_nvars(
   qslice_fun = qslice::slice_stepping_out,
   ...,
   n_samples = 500,
-  burnin = 100
+  burnin = 100,
+  parallelise = TRUE,
+  n_cores = as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")) - 1
 )
 }
 \arguments{
@@ -47,6 +49,12 @@ but all functions are available.}
 
 \item{burnin}{a \code{numeric} with the number of samples to be marked as "burnin". Burnin samples are not
 included in the \code{beta_mean} calculation to increase finite sample performance of the LLN estimate}
+
+\item{parallelise}{a \code{logical} if the runs of the algorithm across values of \code{n_vars} should be
+parallelised using \link[future.apply:future_lapply]{future.apply::future_lapply}}
+
+\item{n_cores}{a \code{numeric} with the number of cores to use for parallelisation. Default is 1 less
+than the number of available cores}
 }
 \value{
 a \code{data.frame} with information on computation time for different values of \code{n_vars}

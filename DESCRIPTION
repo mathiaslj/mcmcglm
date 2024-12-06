@@ -11,6 +11,8 @@ Imports:
     cli,
     distributional,
     dplyr,
+    future,
+    future.apply,
     ggplot2,
     magrittr,
     patchwork,

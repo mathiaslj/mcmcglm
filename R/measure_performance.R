@@ -97,6 +97,10 @@ generate_and_compare_eta_comptime <- function(n_vars,
 #' @param n_vars a `numeric vector` with numbers of normally distributed columns in the design matrix
 #' for different runs
 #' @param n a `numeric` with the number of observations in the data analysed by the GLM
+#' @param parallelise a `logical` if the runs of the algorithm across values of `n_vars` should be
+#' parallelised using [future.apply::future_lapply]
+#' @param n_cores a `numeric` with the number of cores to use for parallelisation. Default is 1 less
+#' than the number of available cores
 #'
 #' @return a `data.frame` with information on computation time for different values of `n_vars`
 #' @export
@@ -114,18 +118,37 @@ compare_eta_comptime_across_nvars <- function(n_vars,
                                               qslice_fun = qslice::slice_stepping_out,
                                               ...,
                                               n_samples = 500,
-                                              burnin = 100) {
+                                              burnin = 100,
+                                              parallelise = TRUE,
+                                              n_cores = as.numeric(Sys.getenv('NUMBER_OF_PROCESSORS')) - 1) {
 
   if (identical(qslice_fun, qslice::slice_stepping_out) & length(list(...)) == 0) w <- 0.5
 
   args <- c(as.list(environment()), list(...))
-  args_without_nvars <- args[names(args) != "n_vars"]
+  args_to_call_mcmcglm <- args[!names(args) %in% c("n_vars", "parallelise", "n_cores")]
 
-  lapply(n_vars, function(n_vars) {
-    do.call(generate_and_compare_eta_comptime,
-            c(n_vars, args_without_nvars))
-  }) %>%
-    dplyr::bind_rows()
+  if (parallelise) {
+    future::plan(future::multisession)
+    comptime_nvars <- future.apply::future_lapply(
+      n_vars,
+      function(n_vars) {
+        do.call(generate_and_compare_eta_comptime,
+                c(n_vars, args_to_call_mcmcglm))
+      },
+      future.seed = TRUE)
+    future::plan(future::sequential)
+    return(out)
+  } else {
+    comptime_nvars <- lapply(n_vars, function(n_vars) {
+      do.call(generate_and_compare_eta_comptime,
+              c(n_vars, args_to_call_mcmcglm))
+    })
+  }
+
+  out <- comptime_nvars %>%
+    dplyr::bind_rows() %>%
+    dplyr::mutate(parallelised = parallelise)
+  return(out)
 }
 
 #' Plot the results of [compare_eta_comptime_across_nvars]
@@ -152,6 +175,7 @@ compare_eta_comptime_across_nvars <- function(n_vars,
 plot_eta_comptime <- function(eta_comptime_data, facet_by = "qslice_fun") {
   ggplot2::ggplot(eta_comptime_data, ggplot2::aes(x = n_vars, y = time, col = linear_predictor_calc)) +
     ggplot2::geom_line() +
+    ggplot2::geom_point() +
     ggplot2::theme_bw() +
     ggplot2::labs(y = "Computation time (seconds)", x = "Dimension of parameter vector, d") +
     ggplot2::facet_wrap(facet_by, labeller = "label_both")

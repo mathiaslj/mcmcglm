@@ -15,7 +15,9 @@ mcmcglm_across_tuningparams(
   sample_method = c("slice_sampling", "normal-normal"),
   qslice_fun = qslice::slice_stepping_out,
   n_samples = 500,
-  burnin = 100
+  burnin = 100,
+  parallelise = TRUE,
+  n_cores = as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")) - 1
 )
 }
 \arguments{
