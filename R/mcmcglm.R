@@ -178,8 +178,13 @@ mcmcglm <- function(formula,
   n_obs <- nrow(Y)
 
   # Creating parameter list to hold beta, eta and mu conveniently to do sampling
+  names_of_iterations <- c("init",
+                           ifelse(burnin == 0, yes = character(0), no = paste0("burnin", 1:burnin)),
+                           paste0("iteration", 1:(n_samples-burnin)))
+  names_of_iterations <- names_of_iterations[!is.na(names_of_iterations)]
+
   param_list <- rep(list(list(beta = NULL, eta = NULL, mu = NULL)), n_samples + 1) %>%
-    setNames(c("init", paste0("burnin", 1:burnin), paste0("iteration", 1:(n_samples-burnin))))
+    setNames(names_of_iterations)
 
   # Creating beta_data with structure that we want to output to user. Easier to save results
   # as we go "in correct format" than re-arranging after
