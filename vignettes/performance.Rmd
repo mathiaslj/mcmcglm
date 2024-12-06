@@ -1,0 +1,45 @@
+---
+title: "Performance of package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Performance of package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+comment = "#>",
+fig.width = 8
+)
+```
+
+```{r setup, include = FALSE}
+library(mcmcglm)
+withr::local_options(list(cli.progress_show_after = 300))
+withr::local_seed(42)
+```
+
+## Graph of compute time as function of dimension
+
+### Using default slice function
+```{r run-compare}
+resw05 <- compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 200, to = 1000, by = 200)),
+                                            n_samples = 100,
+                                            burnin = 10,
+                                            w = 0.5)
+
+resw10 <- compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 200, to = 1000, by = 200)),
+                                            n_samples = 100,
+                                            burnin = 10,
+                                            w = 10)
+```
+
+```{r show-compare}
+dplyr::bind_rows(resw05, resw10) %>% 
+  plot_eta_comptime()
+```
+
+
+## Versus naive computation

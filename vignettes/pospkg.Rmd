@@ -249,7 +249,7 @@ See more details in the article, but we'll quickly show the simple and elegant i
 
 The CGGibbs approach to calculate the linear predictor in the $k$'th iteration for component $j$, $\eta_{(j)}^{(k)}$, is then
 \begin{align}
-  \eta_{(j)}^{(k)}=\eta_{(j-1)}^{(k)}+\sum_{i=1}^n x_{ij} (\beta_j^{(k)}-\beta_j^{(k-1)})}
+  \eta_{(j)}^{(k)}=\eta_{(j-1)}^{(k)}+\sum_{i=1}^n x_{ij} (\beta_j^{(k)}-\beta_j^{(k-1)})
 \end{align}
 
 while the naive approach is

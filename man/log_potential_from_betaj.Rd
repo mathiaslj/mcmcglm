@@ -40,7 +40,8 @@ of a call to a family function. (See \link{family} for details of family functio
 \item{linear_predictor_calc}{a \code{character} specifying the method used to calculate the
 linear predictor in each step of the gibbs algorithm. Default is "update", which uses
 the CGGibbs procedure as described at the start of
-\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#tuning-and-changing-the-slice-sampler-procedure}{this section in a vignette}}
+\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#advantage-of-cggibbs}{this section in a vignette}.
+Other option is "naive", which does the usual}
 
 \item{...}{arguments passed on to the S3 generic \link{log_density}}
 }

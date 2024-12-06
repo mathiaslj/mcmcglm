@@ -28,6 +28,12 @@ reference:
   contents:
   - mcmcglm_across_tuningparams
   - plot_mcmcglm_across_tuningparams
+- subtitle: Tools for investigating computation time for different methods
+  desc: >
+    A function which returns a data frame of computation time for different specifications and method for plotting results
+  contents:
+  - compare_eta_comptime_across_nvars
+  - plot_eta_comptime
 
 articles:
 - title: Sampling posterior distributions across families and posteriors
@@ -35,3 +41,4 @@ articles:
   contents:
   - pospkg
   - customising
+  - performance

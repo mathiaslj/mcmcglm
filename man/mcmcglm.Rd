@@ -40,7 +40,8 @@ Fx. specification of \code{log_likelihood_extra_args = list(sd = x)} is needed f
 \item{linear_predictor_calc}{a \code{character} specifying the method used to calculate the
 linear predictor in each step of the gibbs algorithm. Default is "update", which uses
 the CGGibbs procedure as described at the start of
-\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#tuning-and-changing-the-slice-sampler-procedure}{this section in a vignette}}
+\href{https://mathiaslj.github.io/mcmcglm/articles/pospkg.html#advantage-of-cggibbs}{this section in a vignette}.
+Other option is "naive", which does the usual}
 
 \item{sample_method}{a \code{character} specifying the method used for sampling. The default \code{"slice_sampling"}
 is the intended value in most cases, as it works for any specification of \code{family} and \code{beta_prior}.
