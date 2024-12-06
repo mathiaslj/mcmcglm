@@ -51,6 +51,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Create test data for different scenarios
 #' n <- 100
 #' x1 <- rnorm (n)
@@ -142,6 +143,7 @@
 #'                    mu = 1.5,
 #'                    sigma = 2)
 #' log3
+#' }
 mcmcglm <- function(formula,
                     family = gaussian,
                     data,

@@ -77,6 +77,7 @@ uses an updating scheme for the linear predictor during each
 draw of Gibbs sampling on coordinates of the parameter vector
 }
 \examples{
+\dontrun{
 # Create test data for different scenarios
 n <- 100
 x1 <- rnorm (n)
@@ -168,6 +169,7 @@ log3 <- mcmcglm(formula = Y ~ .,
                    mu = 1.5,
                    sigma = 2)
 log3
+}
 }
 \references{
 \href{https://arxiv.org/abs/2410.03630}{Is Gibbs sampling faster than Hamiltonian Monte Carlo on GLMs?},
