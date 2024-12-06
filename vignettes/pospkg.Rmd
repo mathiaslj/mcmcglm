@@ -309,7 +309,8 @@ w05_mcmcglms <- mcmcglm_across_tuningparams(
   tuning_parameter_name = "w",
   formula = Y ~ .,
   family = "gaussian",
-  data = dat_norm)
+  data = dat_norm,
+  parallelise = FALSE)
 
 plot_mcmcglm_across_tuningparams(w05_mcmcglms)
 ```
@@ -329,7 +330,8 @@ df1_mcmcglms <- mcmcglm_across_tuningparams(
   data = dat_norm,
   qslice_fun = qslice::slice_genelliptical,
   mu = 2,
-  sigma = 1)
+  sigma = 1,
+  parallelise = FALSE)
 
 plot_mcmcglm_across_tuningparams(df1_mcmcglms)
 ```
