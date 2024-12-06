@@ -51,7 +51,7 @@ mcmcglm_across_tuningparams <- function(...,
                                        qslice_fun = qslice::slice_stepping_out,
                                        n_samples = 500,
                                        burnin = 100,
-                                       parallelise = TRUE,
+                                       parallelise = FALSE,
                                        n_cores = as.numeric(Sys.getenv('NUMBER_OF_PROCESSORS')) - 1) {
 
   args <- c(as.list(environment()))
@@ -70,7 +70,7 @@ mcmcglm_across_tuningparams <- function(...,
   }
 
   if (parallelise) {
-    future::plan(future::multisession)
+    future::plan(future::multisession, workers = n_cores)
     out <- future.apply::future_lapply(
       tuning_param_lapply_over,
       fun_of_tuning_parameter,

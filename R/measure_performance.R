@@ -119,7 +119,7 @@ compare_eta_comptime_across_nvars <- function(n_vars,
                                               ...,
                                               n_samples = 500,
                                               burnin = 100,
-                                              parallelise = TRUE,
+                                              parallelise = FALSE,
                                               n_cores = as.numeric(Sys.getenv('NUMBER_OF_PROCESSORS')) - 1) {
 
   if (identical(qslice_fun, qslice::slice_stepping_out) & length(list(...)) == 0) w <- 0.5

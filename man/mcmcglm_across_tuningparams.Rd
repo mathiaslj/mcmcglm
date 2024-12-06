@@ -16,7 +16,7 @@ mcmcglm_across_tuningparams(
   qslice_fun = qslice::slice_stepping_out,
   n_samples = 500,
   burnin = 100,
-  parallelise = TRUE,
+  parallelise = FALSE,
   n_cores = as.numeric(Sys.getenv("NUMBER_OF_PROCESSORS")) - 1
 )
 }
