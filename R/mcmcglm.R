@@ -179,7 +179,7 @@ mcmcglm <- function(formula,
 
   beta_data <- data.frame(rep(list(template_betaj_vec), n_vars)) %>%
     setNames(colnames(X)) %>%
-    dplyr::mutate(iteration = dplyr::row_number() - 1) %>%
+    dplyr::mutate(iteration = dplyr::row_number() - 1L) %>%
     dplyr::mutate(burnin = ifelse(iteration <= burnin+1, TRUE, FALSE))
 
   list_of_marginal_priors <- length(beta_prior) > 1

@@ -74,7 +74,13 @@ mcmcglm_across_tuningparams <- function(...,
 #' better with plot_list_of_mcmcglms function
 #' @noRd
 trace_plot_wtuning <- function(mcmcglm, tuning_parameter_name) {
+  n_iterations <- nrow(samples(mcmcglm)) - 1
+  space_on_each_side <- ceiling(n_iterations/50)
+  x_limits <- c(0 - space_on_each_side, n_iterations + space_on_each_side)
+
   trace_plot(mcmcglm) +
+    ggplot2::scale_x_continuous(limits = x_limits,
+                                breaks = c(0, n_iterations/2, n_iterations)) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::labs(title = paste0(tuning_parameter_name,
                                  " = ",
