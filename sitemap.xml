@@ -4,9 +4,11 @@
 <url><loc>https://mathiaslj.github.io/mcmcglm/LICENSE.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/articles/customising.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/articles/index.html</loc></url>
+<url><loc>https://mathiaslj.github.io/mcmcglm/articles/performance.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/articles/pospkg.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/authors.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/index.html</loc></url>
+<url><loc>https://mathiaslj.github.io/mcmcglm/reference/compare_eta_comptime_across_nvars.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/index.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/log_density.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/log_likelihood.html</loc></url>
@@ -14,6 +16,7 @@
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/mcmcglm-package.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/mcmcglm.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/mcmcglm_across_tuningparams.html</loc></url>
+<url><loc>https://mathiaslj.github.io/mcmcglm/reference/plot_eta_comptime.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/plot_mcmcglm_across_tuningparams.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/samples.html</loc></url>
 <url><loc>https://mathiaslj.github.io/mcmcglm/reference/trace_plot.html</loc></url>

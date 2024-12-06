@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/pospkg.html">Examples of family, prior and slice sampler specifications</a></li>
     <li><a class="dropdown-item" href="../articles/customising.html">Adding methods for families</a></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance of package</a></li>
   </ul>
 </li>
       </ul>
@@ -113,7 +114,7 @@ in the GLM model, and <code>Y</code> is the response variable.</p>
 <span>                            beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">dist_gamma</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                            w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  34% | ETA:  2s</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  72% | ETA:  1s</span></span>
+<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  69% | ETA:  1s</span></span>
 <span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
 <span><span class="fu"><a href="../reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">invnorm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="customising_files/figure-html/invgauss-run-show-1.png" width="700"></p>
@@ -130,7 +131,7 @@ arguments to this density through the
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mathias Lerbech Jeppesen.</p>
+  <p>Developed by Mathias Lerbech Jeppesen, Julie Køhler Munkvad.</p>
 </div>
 
 <div class="pkgdown-footer-right">

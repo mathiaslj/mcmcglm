@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/pospkg.html">Examples of family, prior and slice sampler specifications</a></li>
     <li><a class="dropdown-item" href="../articles/customising.html">Adding methods for families</a></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance of package</a></li>
   </ul>
 </li>
       </ul>
@@ -409,10 +410,10 @@ the “current” value is
 iteration for component
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\eta_{(j)}^{(k)}</annotation></semantics></math>,
-is then <span class="math display">$$\begin{align}
-  \eta_{(j)}^{(k)}=\eta_{(j-1)}^{(k)}+\sum_{i=1}^n x_{ij}
-(\beta_j^{(k)}-\beta_j^{(k-1)})}
-\end{align}$$</span></p>
+is then
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msubsup><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><msubsup><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>β</mi><mi>j</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>−</mo><msubsup><mi>β</mi><mi>j</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+  \eta_{(j)}^{(k)}=\eta_{(j-1)}^{(k)}+\sum_{i=1}^n x_{ij} (\beta_j^{(k)}-\beta_j^{(k-1)})
+\end{align}</annotation></semantics></math></p>
 <p>while the naive approach is
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msubsup><mi>η</mi><mi>j</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><munderover><mo>∑</mo><mrow><mi>l</mi><mo>=</mo><mn>1</mn></mrow><mi>d</mi></munderover><msub><mi>x</mi><mrow><mi>i</mi><mi>l</mi></mrow></msub><msubsup><mi>β</mi><mi>l</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>𝟏</mn><mrow><mo stretchy="true" form="prefix">[</mo><mi>j</mi><mo>&gt;</mo><mi>l</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></msubsup></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
   \eta_j^{(k)}=\sum_{i=1}^n\sum_{l=1}^d x_{il} \beta_l^{(k-\mathbf{1}[j&gt;l])}
@@ -511,7 +512,8 @@ different values of the slice width is seen below:</p>
 <span>  tuning_parameter_name <span class="op">=</span> <span class="st">"w"</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>  family <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">dat_norm</span><span class="op">)</span></span>
+<span>  data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
+<span>  parallelise <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_mcmcglm_across_tuningparams.html">plot_mcmcglm_across_tuningparams</a></span><span class="op">(</span><span class="va">w05_mcmcglms</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pospkg_files/figure-html/vary-w-1.png" width="768"></p>
@@ -539,7 +541,8 @@ So in the below example, we have to keep <code>sigma</code> and
 <span>  data <span class="op">=</span> <span class="va">dat_norm</span>,</span>
 <span>  qslice_fun <span class="op">=</span> <span class="fu">qslice</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/qslice/man/slice_genelliptical.html" class="external-link">slice_genelliptical</a></span>,</span>
 <span>  mu <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  sigma <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  parallelise <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_mcmcglm_across_tuningparams.html">plot_mcmcglm_across_tuningparams</a></span><span class="op">(</span><span class="va">df1_mcmcglms</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pospkg_files/figure-html/vary-df-1.png" width="768"></p>
@@ -571,7 +574,7 @@ example below:</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mathias Lerbech Jeppesen.</p>
+  <p>Developed by Mathias Lerbech Jeppesen, Julie Køhler Munkvad.</p>
 </div>
 
 <div class="pkgdown-footer-right">

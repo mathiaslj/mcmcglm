@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/pospkg.html">Examples of family, prior and slice sampler specifications</a></li>
     <li><a class="dropdown-item" href="../articles/customising.html">Adding methods for families</a></li>
+    <li><a class="dropdown-item" href="../articles/performance.html">Performance of package</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -133,13 +134,36 @@
 
         </dt>
         <dd>Plot a list of mcmcglms showing varying tuning parameters in the title of the plots</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="tools-for-investigating-computation-time-for-different-methods">Tools for investigating computation time for different methods<a class="anchor" aria-label="anchor" href="#tools-for-investigating-computation-time-for-different-methods"></a></h3>
+      <div class="section-desc"><p>A function which returns a data frame of computation time for different specifications and method for plotting results</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="compare_eta_comptime_across_nvars.html">compare_eta_comptime_across_nvars()</a></code>
+
+        </dt>
+        <dd>Compare runtime using CGGibbs and naive approach to calculate linear predictor</dd>
+      </dl><dl><dt>
+
+          <code><a href="plot_eta_comptime.html">plot_eta_comptime()</a></code>
+
+        </dt>
+        <dd>Plot the results of compare_eta_comptime_across_nvars</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mathias Lerbech Jeppesen.</p>
+  <p>Developed by Mathias Lerbech Jeppesen, Julie Køhler Munkvad.</p>
 </div>
 
 <div class="pkgdown-footer-right">
