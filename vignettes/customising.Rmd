@@ -23,15 +23,13 @@ withr::local_seed(42)
 
 It is very, very easy to extend the package to include a family that is not existing in the package. The only missing piece for any other families is a method for calculating the log-density of the distribution.
 
-Since the calculation of the log-density for a family is implemented using S3 methods, all the user needs to do is define a function called `log_density.*family_name*`
-```{r define-invgauss}
-log_density.inverse.gaussian <- function(family, mu, Y, ...) {
-  statmod::dinvgauss(Y, mean = mu, ..., log = T)
-}
-```
+Since the calculation of the log-density for a family is implemented using S3 methods, all the user needs to do is define a function called `log_density.*family_name*` with *family_name* specified as the relevant family.
 
-and when calling `mcmcglm` remember to add the additional arguments to this density through the `log_likelihood_extra_args` argument in this case by doing fx.
+Below is an example showcasing the single line of code a user needs to write to enable the use of an inverse gaussian family
 
+### Example of implementing method for inverse gaussian family
+
+First, we generate some data to showcase the example.
 ```{r, label = data-generation}
 n <- 1000
 x1 <- rexp(n, 2)
@@ -47,7 +45,14 @@ y_invnorm <- statmod::rinvgauss(n, mean = invgauss_fam$linkinv(lin_pred),
 dat_invnorm <- data.frame(Y = y_invnorm, X1 = x1, X2 = x2)
 ```
 
+All the user needs to do is specify a method for computing the density of an inverse gaussian distribution like so:
+```{r define-invgauss}
+log_density.inverse.gaussian <- function(family, mu, Y, ...) {
+  statmod::dinvgauss(Y, mean = mu, ..., log = T)
+}
+```
 
+Then, `mcmcglm()` can be called like so:
 ```{r, eval = FALSE}
 invnorm <- mcmcglm::mcmcglm(formula = Y ~ .,
                             family = inverse.gaussian(),
@@ -55,7 +60,7 @@ invnorm <- mcmcglm::mcmcglm(formula = Y ~ .,
                             data = dat_invnorm,
                             beta_prior = distributional::dist_gamma(1, 1),
                             w = 0.5)
+trace_plot(invnorm)
 ```
 
-## Using other samplers
-
+where we specify `inverse.gaussian()` as the `family` argument, and we make sure to add the additional arguments to this density through the `log_likelihood_extra_args` argument.
