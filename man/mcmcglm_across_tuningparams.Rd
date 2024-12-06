@@ -63,7 +63,7 @@ The function simply performs an lapply over \link{mcmcglm} for the values provid
 tuning parameter values.
 }
 \examples{
-Create test data for different scenarios
+# Create test data for different scenarios
 n <- 100
 x1 <- rnorm (n)
 x2 <- rbinom (n, 1, .5)

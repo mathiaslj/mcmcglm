@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' Create test data for different scenarios
+#' # Create test data for different scenarios
 #' n <- 100
 #' x1 <- rnorm (n)
 #' x2 <- rbinom (n, 1, .5)
@@ -95,7 +95,7 @@ trace_plot_wtuning <- function(mcmcglm, tuning_parameter_name) {
 #' @export
 #'
 #' @examples
-#' Create test data for different scenarios
+#' # Create test data for different scenarios
 #' n <- 100
 #' x1 <- rnorm (n)
 #' x2 <- rbinom (n, 1, .5)

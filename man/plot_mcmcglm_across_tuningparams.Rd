@@ -14,7 +14,7 @@ a call to \link{mcmcglm_across_tuningparams}}
 Plot a list of mcmcglms showing varying tuning parameters in the title of the plots
 }
 \examples{
-Create test data for different scenarios
+# Create test data for different scenarios
 n <- 100
 x1 <- rnorm (n)
 x2 <- rbinom (n, 1, .5)
