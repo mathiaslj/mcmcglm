@@ -11,8 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
 collapse = TRUE,
 comment = "#>",
-fig.width = 8,
-fig.height = 2.5
+fig.width = 8
 )
 ```
 
@@ -76,7 +75,7 @@ dat_logit <- data.frame(Y = y_logit, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
-```{r, label = logit-run-show}
+```{r, label = logit-run-show, fig.height = 2.5}
 logit <- mcmcglm(formula = Y ~ .,
                   data = dat_logit,
                   family = binomial(link = "logit"),
@@ -98,7 +97,7 @@ dat_probit <- data.frame(Y = y_probit, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
-```{r, label = probit-run-show}
+```{r, label = probit-run-show, fig.height = 2.5}
 probit <- mcmcglm(formula = Y ~ .,
                   data = dat_probit,
                   family = binomial(link = "probit"),
@@ -120,7 +119,7 @@ dat_pois <- data.frame(Y = y_pois, X1 = x1, X2 = x2)
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
-```{r, label = poisson-run-show}
+```{r, label = poisson-run-show, fig.height = 2.5}
 pois <- mcmcglm(formula = Y ~ .,
                 data = dat_pois,
                 family = "poisson",
@@ -146,7 +145,7 @@ theta <- 3
 ```
 
 Then we fit the `mcmcglm` and inspect the trace plot.
-```{r, label = negbin-run-show}
+```{r, label = negbin-run-show, fig.height = 2.5}
 nbinom <- mcmcglm(formula = Y ~ .,
                   data = dat_nbinom,
                   family = MASS::negative.binomial(theta),
@@ -177,7 +176,7 @@ In the case of iid priors, a single univariate distribution specification is nee
 
 > To make the example not the exact same as the introductory example in the README, we show how the posterior distribution is affected by a prior with a mean very different from what the data(/likelihood) is showing.
 
-```{r iid-run-show}
+```{r iid-run-show, fig.height = 2.5}
 iid <- mcmcglm(formula = Y ~ .,
                family = "gaussian",
                data = dat_norm,
@@ -191,7 +190,7 @@ Of course, any distribution could be used here using the `dist_` functions of th
 ### Example of independent and potentially different priors
 
 Due to an S3 method implementation in this [mcmcglm](https://github.com/mathiaslj/mcmcglm) package, it's possible to specify `beta_prior` as a list of `distribution` objects. For illustrative purposes, we use the distributions mentioned in the above example to specify a different prior for each $\beta$ component.
-```{r indep-run-show}
+```{r indep-run-show, fig.height = 2.5}
 indep <- mcmcglm(formula = Y ~ .,
                  family = "gaussian",
                  data = dat_norm,
@@ -221,7 +220,7 @@ The only implemented multivariate distribution is the `distributional::dist_mult
 \right)
 \end{align}
 
-```{r mult-run-show}
+```{r mult-run-show, fig.height = 2.5}
 mult <- mcmcglm(formula = Y ~ .,
                 family = "gaussian",
                 data = dat_norm,
@@ -273,7 +272,7 @@ The default method of slice sampling is with "stepping-out" and "shrinkage" as d
 All `slice_` functions from the [qslice](https://CRAN.R-project.org/package=qslice) package have arguments `x` and `log_target`. The `mcmcglm` function finds these entities as a new component of the $\beta$ vector in any given iteration and as the log-potential evaluated as a function of this new value of the parameter.
 
 Thus, the task left to the user is to specify tuning parameters of the chosen algorithm, which is passed through `...` in `mcmcglm()`. The default slice sampler uses the `qslice::slice_stepping_out()` function, which has a mandatory non-default argument `w` with the slice width of the algorithm. Thus, as readers might have noticed in other examples within this vignette or the [README](https://mathiaslj.github.io/mcmcglm/index.html), a specification of `w = x` is given in the calls to `mcmcglm()`. Example below for completeness:
-```{r slice-default}
+```{r slice-default, eval = FALSE}
 norm <- mcmcglm(formula = Y ~ .,
                 family = "gaussian",
                 data = dat_norm,
@@ -285,7 +284,7 @@ norm <- mcmcglm(formula = Y ~ .,
 ### Changing the default slice sampling method
 
 The argument `qslice_fun` in the `mcmcglm()` function allows the user to change the default slice sampler `qslice::slice_stepping_out()` to any slice sampler from the `qslice` package. Thus, below is an example of using `qslice::slice_elliptical()` from [Murray et al. (2010)](https://proceedings.mlr.press/v9/murray10a), which has tuning parameters `mu` and `sigma`:
-```{r slice-elliptical}
+```{r slice-elliptical, fig.height = 2.5}
 el <- mcmcglm(formula = Y ~ .,
                 family = "gaussian",
                 data = dat_norm,
@@ -304,7 +303,7 @@ The utility functions `mcmcglm_across_tuningparams()` and `plot_mcmcglm_across_t
 
 Fx. for the default choice of slice sampler, `qslice::slice_stepping_out()`, the tuning parameter is the slice width `w`. A way to create a plot of samples across different values of the slice width is seen below:
 
-```{r vary-w, fit.height = 5}
+```{r vary-w, fig.height = 4}
 w05_mcmcglms <- mcmcglm_across_tuningparams(
   seq(from = 0.5, by = 0.5, length.out = 4),
   tuning_parameter_name = "w",
@@ -322,7 +321,7 @@ Since the utility function work generally for any single tuning parameter, below
 
 > Note that only a single tuning parameter can be "varied" at a time. So in the below example, we have to keep `sigma` and `mu` constant, while we vary over `df`
 
-```{r vary-df, fit.height = 5}
+```{r vary-df, fig.height = 4}
 df1_mcmcglms <- mcmcglm_across_tuningparams(
   c(1, seq(from = 10, by = 10, length.out = 3)),
   tuning_parameter_name = "df",
@@ -340,7 +339,7 @@ plot_mcmcglm_across_tuningparams(df1_mcmcglms)
 ### Normal-normal sample method
 
 Mostly for testing purposes, the package has an implementation of sampling from a closed-form normal distribution in the case where both the response and prior are normally distributed. Running this requires specifying `"normal-normal"` in the argument `sample_method` in `mcmcglm()` as seen in the example below:
-```{r normal-normal}
+```{r normal-normal, fig.height = 2.5}
 norm_norm <- mcmcglm(formula = Y ~ .,
                 family = "gaussian",
                 data = dat_norm,

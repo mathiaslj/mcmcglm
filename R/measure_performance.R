@@ -172,10 +172,12 @@ compare_eta_comptime_across_nvars <- function(n_vars,
 #'                                          burnin = 20)
 #' plot_eta_comptime(res)
 plot_eta_comptime <- function(eta_comptime_data, facet_by = "qslice_fun") {
-  ggplot2::ggplot(eta_comptime_data, ggplot2::aes(x = n_vars, y = time, col = linear_predictor_calc)) +
+  eta_comptime_data %>%
+    dplyr::mutate(time = as.numeric(time)) %>%
+  ggplot2::ggplot(ggplot2::aes(x = n_vars, y = time, col = linear_predictor_calc)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::theme_bw() +
-    ggplot2::labs(y = "Computation time (seconds)", x = "Dimension of parameter vector, d") +
+    ggplot2::labs(y = "Computation time (seconds)", x = "Dimension of parameter vector") +
     ggplot2::facet_wrap(facet_by, labeller = "label_both")
 }
