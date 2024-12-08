@@ -74,51 +74,10 @@
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_eta_comptime_across_nvars.html">compare_eta_comptime_across_nvars</a></span><span class="op">(</span></span>
-<span>  n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">500</span>, to <span class="op">=</span> <span class="fl">1000</span>, by <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  n_samples <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  burnin <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  w <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  parallelise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■                            </span>  10% | ETA: 24m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■                         </span>  20% | ETA: 11m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% | ETA:  7m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  40% | ETA:  5m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% | ETA:  3m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA:  2m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  70% | ETA:  1m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  80% | ETA:  1m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA: 23s</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■                            </span>  10% | ETA:  1h</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■                         </span>  20% | ETA: 40m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% | ETA: 27m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  40% | ETA: 20m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% | ETA: 14m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA: 10m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  70% | ETA:  7m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  80% | ETA:  4m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  2m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■                            </span>  10% | ETA:  3h</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■                         </span>  20% | ETA:  1h</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% | ETA: 47m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  40% | ETA: 31m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% | ETA: 21m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA: 14m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  70% | ETA:  9m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  80% | ETA:  6m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  2m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■                            </span>  10% | ETA:  2h</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■                         </span>  20% | ETA:  1h</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% | ETA:  1h</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■                   </span>  40% | ETA: 35m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% | ETA: 25m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% | ETA: 17m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■          </span>  70% | ETA: 11m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■       </span>  80% | ETA:  7m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  3m</span></span>
-<span><span class="co">#&gt; Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span></span></code></pre></div>
+<span>  n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">20</span>, to <span class="op">=</span> <span class="fl">200</span>, by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  n_samples <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  burnin <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_eta_comptime.html">plot_eta_comptime</a></span><span class="op">(</span><span class="va">res</span>, facet_by <span class="op">=</span> <span class="st">"w"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Don't know how to automatically pick scale for object of type <span style="color: #0000BB;">&lt;difftime&gt;</span>.</span></span>
