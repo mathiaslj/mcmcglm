@@ -22,6 +22,15 @@ samples.mcmcglm <- function(x) {
   x$beta_samples
 }
 
+#' S3 method for getting the average value of coefficients
+#'
+#' @param x an `mcmcglm` object
+#'
+#' @export
+coef.mcmcglm <- function(x) {
+  x$beta_mean
+}
+
 #' Create a trace plot of the MCMC samples
 #'
 #' @inheritParams samples
