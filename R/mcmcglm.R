@@ -199,6 +199,7 @@ mcmcglm <- function(formula,
 
   list_of_marginal_priors <- length(beta_prior) > 1
   if (list_of_marginal_priors) {
+    if (length(beta_prior) != n_vars) stop("The list length of the `beta_prior` specification needs to match the number of parameters in the model (potentially including intercept)")
     init_beta <- numeric(n_vars)
     for (j in 1:n_vars) {
       init_beta[j] <- distributional::generate(beta_prior[[j]], 1)[[1]]
