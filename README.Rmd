@@ -41,7 +41,7 @@ withr::local_seed(42)
  
 We first simulate some data from a linear model to use for showcasing the use of `mcmcglm` for a gaussian family. 
 ```{r, label = data-generation}
-n <- 100
+n <- 1000
 x1 <- rnorm (n)
 x2 <- rbinom (n, 1, .5)
 b0 <- 1
@@ -74,6 +74,11 @@ norm
 summarising the call of the function with averages of the samples of each parameter in the GLM model.
 
 ### Investigating results
+
+The averages shown in the print method of the object can be retrieved with the generic `coef` like so:
+```{r, label = gaussian-coef}
+coef(norm)
+```
 
 The full data set of samples can be accessed with the `samples` function:
 ```{r, label = gaussian-samples}

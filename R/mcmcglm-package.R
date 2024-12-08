@@ -12,6 +12,8 @@
 #' @importFrom stats is.empty.model
 #' @importFrom stats model.matrix
 #' @importFrom stats model.response
+#' @importFrom stats rnorm
 #' @importFrom stats setNames
+#' @importFrom stats time
 ## usethis namespace: end
 NULL

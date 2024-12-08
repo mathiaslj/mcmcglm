@@ -35,7 +35,7 @@ We first simulate some data from a linear model to use for showcasing
 the use of `mcmcglm` for a gaussian family.
 
 ``` r
-n <- 100
+n <- 1000
 x1 <- rnorm (n)
 x2 <- rbinom (n, 1, .5)
 b0 <- 1
@@ -77,7 +77,7 @@ norm
 #> 
 #> Average of parameter samples:
 #>   (Intercept)       X1       X2
-#> 1    1.081188 1.563513 1.733437
+#> 1    1.011134 1.490459 2.026047
 ```
 
 summarising the call of the function with averages of the samples of
@@ -85,18 +85,27 @@ each parameter in the GLM model.
 
 ### Investigating results
 
+The averages shown in the print method of the object can be retrieved
+with the generic `coef` like so:
+
+``` r
+coef(norm)
+#>   (Intercept)       X1       X2
+#> 1    1.011134 1.490459 2.026047
+```
+
 The full data set of samples can be accessed with the `samples`
 function:
 
 ``` r
 head(samples(norm))
-#>   (Intercept)         X1         X2 iteration burnin
-#> 1   -1.096156 0.04905045 -1.1984959         0   TRUE
-#> 2    5.150198 2.27939313 -2.0547715         1   TRUE
-#> 3    1.171198 2.10736753 -1.4556810         2   TRUE
-#> 4    2.201093 1.02283189  0.1304377         3   TRUE
-#> 5    1.761626 1.99163723  0.3076245         4   TRUE
-#> 6    1.715483 1.29845999  1.5699513         5   TRUE
+#>   (Intercept)           X1          X2 iteration burnin
+#> 1   0.6173367 -0.004541141 -0.09125636         0   TRUE
+#> 2   2.6508146  0.281295470  0.68343132         1   TRUE
+#> 3   0.8240996  0.324627659  2.30889073         2   TRUE
+#> 4   0.8170086  1.028326905  2.20351455         3   TRUE
+#> 5   0.8777350  1.592074284  2.16115289         4   TRUE
+#> 6   0.9092187  1.442872350  2.02913214         5   TRUE
 ```
 
 A trace plot can be seen with the function `trace_plot`:
