@@ -74,14 +74,12 @@
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_eta_comptime_across_nvars.html">compare_eta_comptime_across_nvars</a></span><span class="op">(</span></span>
-<span>  n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">20</span>, to <span class="op">=</span> <span class="fl">200</span>, by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">40</span>, to <span class="op">=</span> <span class="fl">400</span>, by <span class="op">=</span> <span class="fl">40</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  n_samples <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  burnin <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_eta_comptime.html">plot_eta_comptime</a></span><span class="op">(</span><span class="va">res</span>, facet_by <span class="op">=</span> <span class="st">"w"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Don't know how to automatically pick scale for object of type <span style="color: #0000BB;">&lt;difftime&gt;</span>.</span></span>
-<span><span class="co">#&gt; Defaulting to continuous.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_eta_comptime.html">plot_eta_comptime</a></span><span class="op">(</span><span class="va">res</span>, facet_by <span class="op">=</span> <span class="st">"w"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="performance_files/figure-html/show-compare-1.png" width="768"></p>
 <p>Could run over different slice widths if interested</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
