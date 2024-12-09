@@ -3,14 +3,6 @@ template:
   bootstrap: 5
 
 reference:
-- title: Calculating the log-potential
-  desc: >
-    Utilities for calculating the log-potential as a function of a new coordinate of parameter vector in order to perform slice sampling within Gibbs
-  contents:
-  - log_density
-  - log_likelihood
-  - update_linear_predictor
-  - log_potential_from_betaj
 - title: Sampling posterior distributions of parameters in a GLM
   desc: >
     Function to perform sampling as well as methods to investigate results
@@ -35,6 +27,14 @@ reference:
   contents:
   - compare_eta_comptime_across_nvars
   - plot_eta_comptime
+- title: Calculating the log-potential
+  desc: >
+    Utilities for calculating the log-potential as a function of a new coordinate of parameter vector in order to perform slice sampling within Gibbs
+  contents:
+  - log_density
+  - log_likelihood
+  - update_linear_predictor
+  - log_potential_from_betaj
 
 articles:
 - title: Sampling posterior distributions across families and posteriors
