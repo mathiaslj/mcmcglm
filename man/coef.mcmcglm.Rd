@@ -12,3 +12,31 @@
 \description{
 S3 method for getting the average value of coefficients
 }
+\examples{
+\dontrun{
+# Create test data
+n <- 100
+x1 <- rnorm (n)
+x2 <- rbinom (n, 1, .5)
+b0 <- 1
+b1 <- 1.5
+b2 <- 2
+lin_pred <- b0+b1*x1+b2*x2
+
+# For family "gaussian" and iid normal prior
+y_norm <- rnorm(n, mean = lin_pred, sd = 1)
+dat_norm <- data.frame(Y = y_norm, X1 = x1, X2 = x2)
+
+norm <- mcmcglm(formula = Y ~ .,
+                   data = dat_norm,
+                   beta_prior = distributional::dist_normal(0, 1),
+                   family = "gaussian",
+                   n_samples = 100,
+                   burnin = 10,
+                   sample_method = "slice_sampling",
+                   qslice_fun = qslice::slice_stepping_out,
+                   w = 0.5)
+coef(norm)
+}
+
+}
