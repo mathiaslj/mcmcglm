@@ -303,9 +303,9 @@ The utility functions `mcmcglm_across_tuningparams()` and `plot_mcmcglm_across_t
 
 Fx. for the default choice of slice sampler, `qslice::slice_stepping_out()`, the tuning parameter is the slice width `w`. A way to create a plot of samples across different values of the slice width is seen below:
 
-```{r vary-w, fig.height = 5}
+```{r vary-w, fig.height = 4}
 w05_mcmcglms <- mcmcglm_across_tuningparams(
-  seq(from = 0.5, by = 0.5, length.out = 4),
+  c(0.5, 5, 20, 100),
   tuning_parameter_name = "w",
   formula = Y ~ .,
   family = "gaussian",
@@ -321,9 +321,9 @@ Since the utility function work generally for any single tuning parameter, below
 
 > Note that only a single tuning parameter can be "varied" at a time. So in the below example, we have to keep `sigma` and `mu` constant, while we vary over `df`
 
-```{r vary-df, fig.height = 5}
+```{r vary-df, fig.height = 4}
 df1_mcmcglms <- mcmcglm_across_tuningparams(
-  c(1, seq(from = 10, by = 10, length.out = 3)),
+  c(1, 10, 50, 200),
   tuning_parameter_name = "df",
   formula = Y ~ .,
   family = "gaussian",

@@ -4,15 +4,16 @@
 \alias{plot_eta_comptime}
 \title{Plot the results of \link{compare_eta_comptime_across_nvars}}
 \usage{
-plot_eta_comptime(eta_comptime_data, facet_by = "qslice_fun")
+plot_eta_comptime(eta_comptime_data, facet_by = NULL)
 }
 \arguments{
 \item{eta_comptime_data}{a \code{data.frame} with results of computation times. Result of a call to
 \link{compare_eta_comptime_across_nvars}}
 
-\item{facet_by}{a \code{character} with the variable to facet the plots by. Default is "qslice_fun",
-enabling the user to combine results of \link{compare_eta_comptime_across_nvars} across different slice
-functions and plot them easily. Other options are fx. running
+\item{facet_by}{a \code{character} with the variable to facet the plots by. Default is NULL,
+which does not produce any facets. However, a user could specify fx. "qslice_fun" after having
+run \link{compare_eta_comptime_across_nvars} across different slice
+functions. Other options are fx. running
 \link{compare_eta_comptime_across_nvars} for different values of a tuning parameter and seeing how that
 affects runtime}
 }
@@ -25,7 +26,7 @@ Plot the results of \link{compare_eta_comptime_across_nvars}
 \examples{
 # Compare the runtime for 2, 20, 40, 60 variables in the model
 res <- compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 20, to = 60, by = 20)),
-                                         n_samples = 100,
-                                         burnin = 20)
+                                         n_samples = 1,
+                                         burnin = 0)
 plot_eta_comptime(res)
 }

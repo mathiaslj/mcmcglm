@@ -69,6 +69,6 @@ data is simulated with a normal response and normal explanatory variables.
 \examples{
 # Compare the runtime for 2, 20, 40, 60 variables in the model
 compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 20, to = 60, by = 20)),
-                                  n_samples = 100,
-                                  burnin = 20)
+                                  n_samples = 1,
+                                  burnin = 0)
 }

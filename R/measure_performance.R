@@ -108,8 +108,8 @@ generate_and_compare_eta_comptime <- function(n_vars,
 #' @examples
 #' # Compare the runtime for 2, 20, 40, 60 variables in the model
 #' compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 20, to = 60, by = 20)),
-#'                                   n_samples = 100,
-#'                                   burnin = 20)
+#'                                   n_samples = 1,
+#'                                   burnin = 0)
 compare_eta_comptime_across_nvars <- function(n_vars,
                                               n = 100,
                                               beta_prior = distributional::dist_normal(0, 1),
@@ -156,9 +156,10 @@ compare_eta_comptime_across_nvars <- function(n_vars,
 #'
 #' @param eta_comptime_data a `data.frame` with results of computation times. Result of a call to
 #' [compare_eta_comptime_across_nvars]
-#' @param facet_by a `character` with the variable to facet the plots by. Default is "qslice_fun",
-#' enabling the user to combine results of [compare_eta_comptime_across_nvars] across different slice
-#' functions and plot them easily. Other options are fx. running
+#' @param facet_by a `character` with the variable to facet the plots by. Default is NULL,
+#' which does not produce any facets. However, a user could specify fx. "qslice_fun" after having
+#' run [compare_eta_comptime_across_nvars] across different slice
+#' functions. Other options are fx. running
 #' [compare_eta_comptime_across_nvars] for different values of a tuning parameter and seeing how that
 #' affects runtime
 #'
@@ -168,16 +169,19 @@ compare_eta_comptime_across_nvars <- function(n_vars,
 #' @examples
 #' # Compare the runtime for 2, 20, 40, 60 variables in the model
 #' res <- compare_eta_comptime_across_nvars(n_vars = c(2, seq(from = 20, to = 60, by = 20)),
-#'                                          n_samples = 100,
-#'                                          burnin = 20)
+#'                                          n_samples = 1,
+#'                                          burnin = 0)
 #' plot_eta_comptime(res)
-plot_eta_comptime <- function(eta_comptime_data, facet_by = "qslice_fun") {
-  eta_comptime_data %>%
+plot_eta_comptime <- function(eta_comptime_data, facet_by = NULL) {
+  p <- eta_comptime_data %>%
     dplyr::mutate(time = as.numeric(time)) %>%
   ggplot2::ggplot(ggplot2::aes(x = n_vars, y = time, col = linear_predictor_calc)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::theme_bw() +
-    ggplot2::labs(y = "Computation time (seconds)", x = "Dimension of parameter vector") +
-    ggplot2::facet_wrap(facet_by, labeller = "label_both")
+    ggplot2::labs(y = "Computation time (seconds)", x = "Dimension of parameter vector")
+
+  if (!is.null(facet_by)) p <- p + ggplot2::facet_wrap(facet_by, labeller = "label_both")
+
+  return(p)
 }

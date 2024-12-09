@@ -24,22 +24,31 @@ withr::local_seed(42)
 
 ## Graph of compute time as function of dimension
 
-### Using default slice function
+We can use the functions `compare_eta_comptime_across_nvars()` and `plot_eta_comptime()` to investigate computation time of the algorithm for varying dimension of the parameter vector $\beta$. This can also be used to investigate computation time for different sample methods, different tuning parameters, or whatever the user might be interested in.
+
+The basic usage of the function can be used to investigate the computational gain for high dimensions of the CGGibbs sampler compared to the naive approach of doing $d$ computation for each coordinate update. For this purpose, the function call is:
 ```{r run-compare-nvars}
 res <- compare_eta_comptime_across_nvars(
-  n_vars = c(2, seq(from = 40, to = 400, by = 40)),
+  n_vars = c(2, seq(from = 50, to = 1000, by = 50)),
   n_samples = 1,
   burnin = 0,
   w = 0.5)
 ```
 
+The results can be plotted by simply calling 
 ```{r show-compare}
-plot_eta_comptime(res, facet_by = "w")
+plot_eta_comptime(res)
 ```
 
-Could run over different slice widths if interested
+### Runtime across dimensions for different sampling methods
+
+The user can easily just iterate the function across different sampling procedures or tuning parameters for a single sample procedure, bind the results, and then use the `facet_by` argument in `plot_eta_comptime()`.
+
+An example of this could look like:
+> We won't run this code for this vignette to reduce rendering time, but it provides an idea to what is possible using the functionalities.
+
 ```{r run-compare_ws, eval = FALSE}
-ws <- c(0.5, 10)
+ws <- c(0.5, 5, 20, 100)
 res <- lapply(ws, function(w) {
   compare_eta_comptime_across_nvars(
     w = w,
@@ -49,6 +58,6 @@ res <- lapply(ws, function(w) {
     parallelise = TRUE)
 }) %>% 
   dplyr::bind_rows()
-```
 
-## Versus naive computation
+plot_eta_comptime(res, facet_by = "w")
+```
