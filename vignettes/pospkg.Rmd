@@ -254,7 +254,7 @@ The CGGibbs approach to calculate the linear predictor in the $k$'th iteration f
 
 while the naive approach is
 \begin{align}
-  \eta_j^{(k)}=\sum_{i=1}^n\sum_{l=1}^d x_{il} \beta_l^{(k-\mathbf{1}[j>l])}
+  \eta_{(j)}^{(k)}=\sum_{i=1}^n\sum_{l=1}^d x_{il} \beta_l^{(k-\mathbf{1}[j>l])}
 \end{align}
 
 This means that using CGGibbs, for any component update of $\beta$, the computation time is $O(n)$, compared to $O(dn)$ for the naive approach.
