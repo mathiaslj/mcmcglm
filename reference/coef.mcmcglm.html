@@ -57,6 +57,36 @@
 
 </dl></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Create test data</span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span> <span class="op">(</span><span class="va">n</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span> <span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">b0</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fl">1.5</span></span></span>
+<span class="r-in"><span><span class="va">b2</span> <span class="op">&lt;-</span> <span class="fl">2</span></span></span>
+<span class="r-in"><span><span class="va">lin_pred</span> <span class="op">&lt;-</span> <span class="va">b0</span><span class="op">+</span><span class="va">b1</span><span class="op">*</span><span class="va">x1</span><span class="op">+</span><span class="va">b2</span><span class="op">*</span><span class="va">x2</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># For family "gaussian" and iid normal prior</span></span></span>
+<span class="r-in"><span><span class="va">y_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">lin_pred</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">y_norm</span>, X1 <span class="op">=</span> <span class="va">x1</span>, X2 <span class="op">=</span> <span class="va">x2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="mcmcglm.html">mcmcglm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">.</span>,</span></span>
+<span class="r-in"><span>                   data <span class="op">=</span> <span class="va">dat_norm</span>,</span></span>
+<span class="r-in"><span>                   beta_prior <span class="op">=</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_normal.html" class="external-link">dist_normal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   family <span class="op">=</span> <span class="st">"gaussian"</span>,</span></span>
+<span class="r-in"><span>                   n_samples <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>                   burnin <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>                   sample_method <span class="op">=</span> <span class="st">"slice_sampling"</span>,</span></span>
+<span class="r-in"><span>                   qslice_fun <span class="op">=</span> <span class="fu">qslice</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/qslice/man/slice_stepping_out.html" class="external-link">slice_stepping_out</a></span>,</span></span>
+<span class="r-in"><span>                   w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
