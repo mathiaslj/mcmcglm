@@ -81,6 +81,11 @@ The averages shown in the print method of the object can be retrieved with the g
 coef(norm)
 ```
 
+Quantiles of the samples (that are not marked as burnin) are available with the `quantiles()` method, which as a default has `probs = c(0.025, 0.5, 0.975)`:
+```{r, label = gaussian-quantile}
+quantile(norm)
+```
+
 The full data set of samples can be accessed with the `samples` function:
 ```{r, label = gaussian-samples}
 head(samples(norm))

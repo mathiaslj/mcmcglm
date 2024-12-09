@@ -13,6 +13,7 @@ reference:
     Methods to explore results - data of samples and function for creating trace plot
   contents:
   - coef.mcmcglm
+  - quantile.mcmcglm
   - samples
   - trace_plot
 - subtitle: Tuning parameters of slice sampling

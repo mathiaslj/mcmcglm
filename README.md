@@ -94,6 +94,18 @@ coef(norm)
 #> 1    1.011134 1.490459 2.026047
 ```
 
+Quantiles of the samples (that are not marked as burnin) are available
+with the `quantiles()` method, which as a default has
+`probs = c(0.025, 0.5, 0.975)`:
+
+``` r
+quantile(norm)
+#>           var     mean    q_0025     q_05   q_0975
+#> 1 (Intercept) 1.014583 0.8349995 1.013909 1.099346
+#> 2          X1 1.457432 0.6940698 1.497910 1.569321
+#> 3          X2 1.996584 1.8807500 2.024372 2.177676
+```
+
 The full data set of samples can be accessed with the `samples`
 function:
 

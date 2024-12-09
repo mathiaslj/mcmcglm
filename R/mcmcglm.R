@@ -273,9 +273,11 @@ mcmcglm <- function(formula,
     cli::cli_progress_update()
   }
 
-  beta_mean <- beta_data %>%
-    dplyr::filter(burnin == FALSE) %>%
-    dplyr::summarise(dplyr::across(1:3, function(x) mean(x)))
+  beta_noburn <- beta_data %>%
+    dplyr::filter(burnin == FALSE)
+
+  beta_mean <- beta_noburn %>%
+    dplyr::summarise(dplyr::across(1:n_vars, function(x) mean(x)))
 
   out <- c(
     list(beta_samples = beta_data,
