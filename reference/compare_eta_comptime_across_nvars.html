@@ -143,41 +143,17 @@ than the number of available cores</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Compare the runtime for 2, 20, 40, 60 variables in the model</span></span></span>
 <span class="r-in"><span><span class="fu">compare_eta_comptime_across_nvars</span><span class="op">(</span>n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">20</span>, to <span class="op">=</span> <span class="fl">60</span>, by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                  n_samples <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>                                  burnin <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■                        </span>  24% | ETA:  3s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■     </span>  88% | ETA:  0s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  66% | ETA:  1s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■                             </span>   8% | ETA: 21s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■                 </span>  48% | ETA:  5s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  90% | ETA:  1s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■                           </span>  12% | ETA: 16s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  49% | ETA:  5s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■    </span>  89% | ETA:  1s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■                              </span>   2% | ETA:  2m</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■                           </span>  12% | ETA: 38s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  32% | ETA: 17s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■               </span>  54% | ETA: 10s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■        </span>  77% | ETA:  4s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■                            </span>  10% | ETA: 27s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA: 12s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■              </span>  58% | ETA:  7s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■      </span>  83% | ETA:  2s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sampling from posterior <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-in"><span>                                  n_samples <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                                  burnin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              time linear_predictor_calc n_vars n_samples beta_mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.3178432 secs                update      2       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.3526478 secs                 naive      2       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  3.6567104 secs                update     20       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  3.7323031 secs                 naive     20       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  8.6064861 secs                update     40       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  9.0999999 secs                 naive     40       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 17.1090343 secs                update     60       100         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 14.0298944 secs                 naive     60       100         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.01476502 secs                update      2         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.01663566 secs                 naive      2         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.43008637 secs                update     20         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.20615482 secs                 naive     20         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.82726479 secs                update     40         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1.37210488 secs                 naive     40         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 1.67062664 secs                update     60         1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 1.62812662 secs                 naive     60         1         0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   beta_variance   family sd                 qslice_fun   w parallelised</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1             1 gaussian  1 qslice::slice_stepping_out 0.5        FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2             1 gaussian  1 qslice::slice_stepping_out 0.5        FALSE</span>

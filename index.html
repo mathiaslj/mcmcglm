@@ -118,8 +118,15 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   (Intercept)       X1       X2</span></span>
 <span><span class="co">#&gt; 1    1.011134 1.490459 2.026047</span></span></code></pre></div>
-<p>The full data set of samples can be accessed with the <code>samples</code> function:</p>
+<p>Quantiles of the samples (that are not marked as burnin) are available with the <code>quantiles()</code> method, which as a default has <code>probs = c(0.025, 0.5, 0.975)</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           var     mean    q_0025     q_05   q_0975</span></span>
+<span><span class="co">#&gt; 1 (Intercept) 1.014583 0.8349995 1.013909 1.099346</span></span>
+<span><span class="co">#&gt; 2          X1 1.457432 0.6940698 1.497910 1.569321</span></span>
+<span><span class="co">#&gt; 3          X2 1.996584 1.8807500 2.024372 2.177676</span></span></code></pre></div>
+<p>The full data set of samples can be accessed with the <code>samples</code> function:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="reference/samples.html">samples</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   (Intercept)           X1          X2 iteration burnin</span></span>
 <span><span class="co">#&gt; 1   0.6173367 -0.004541141 -0.09125636         0   TRUE</span></span>
@@ -129,7 +136,7 @@
 <span><span class="co">#&gt; 5   0.8777350  1.592074284  2.16115289         4   TRUE</span></span>
 <span><span class="co">#&gt; 6   0.9092187  1.442872350  2.02913214         5   TRUE</span></span></code></pre></div>
 <p>A trace plot can be seen with the function <code>trace_plot</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/trace_plot.html">trace_plot</a></span><span class="op">(</span><span class="va">norm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-gaussian-trace-1.png" width="100%"></p>
 <!-- ## Example -->

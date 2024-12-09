@@ -69,21 +69,42 @@
 <div class="section level2">
 <h2 id="graph-of-compute-time-as-function-of-dimension">Graph of compute time as function of dimension<a class="anchor" aria-label="anchor" href="#graph-of-compute-time-as-function-of-dimension"></a>
 </h2>
-<div class="section level3">
-<h3 id="using-default-slice-function">Using default slice function<a class="anchor" aria-label="anchor" href="#using-default-slice-function"></a>
-</h3>
+<p>We can use the functions
+<code><a href="../reference/compare_eta_comptime_across_nvars.html">compare_eta_comptime_across_nvars()</a></code> and
+<code><a href="../reference/plot_eta_comptime.html">plot_eta_comptime()</a></code> to investigate computation time of the
+algorithm for varying dimension of the parameter vector
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>.
+This can also be used to investigate computation time for different
+sample methods, different tuning parameters, or whatever the user might
+be interested in.</p>
+<p>The basic usage of the function can be used to investigate the
+computational gain for high dimensions of the CGGibbs sampler compared
+to the naive approach of doing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+computation for each coordinate update. For this purpose, the function
+call is:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_eta_comptime_across_nvars.html">compare_eta_comptime_across_nvars</a></span><span class="op">(</span></span>
-<span>  n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">40</span>, to <span class="op">=</span> <span class="fl">400</span>, by <span class="op">=</span> <span class="fl">40</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  n_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">50</span>, to <span class="op">=</span> <span class="fl">600</span>, by <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  n_samples <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  burnin <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  w <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<p>The results can be plotted by simply calling</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_eta_comptime.html">plot_eta_comptime</a></span><span class="op">(</span><span class="va">res</span>, facet_by <span class="op">=</span> <span class="st">"w"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_eta_comptime.html">plot_eta_comptime</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
 <p><img src="performance_files/figure-html/show-compare-1.png" width="768"></p>
-<p>Could run over different slice widths if interested</p>
+<div class="section level3">
+<h3 id="runtime-across-dimensions-for-different-sampling-methods">Runtime across dimensions for different sampling methods<a class="anchor" aria-label="anchor" href="#runtime-across-dimensions-for-different-sampling-methods"></a>
+</h3>
+<p>The user can easily just iterate the function across different
+sampling procedures or tuning parameters for a single sample procedure,
+bind the results, and then use the <code>facet_by</code> argument in
+<code><a href="../reference/plot_eta_comptime.html">plot_eta_comptime()</a></code>.</p>
+<p>An example of this could look like: &gt; We won’t run this code for
+this vignette to reduce rendering time, but it provides an idea to what
+is possible using the functionalities.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">5</span>, <span class="fl">20</span>, <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ws</span>, <span class="kw">function</span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/compare_eta_comptime_across_nvars.html">compare_eta_comptime_across_nvars</a></span><span class="op">(</span></span>
 <span>    w <span class="op">=</span> <span class="va">w</span>,</span>
@@ -92,12 +113,10 @@
 <span>    burnin <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    parallelise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot_eta_comptime.html">plot_eta_comptime</a></span><span class="op">(</span><span class="va">res</span>, facet_by <span class="op">=</span> <span class="st">"w"</span><span class="op">)</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="versus-naive-computation">Versus naive computation<a class="anchor" aria-label="anchor" href="#versus-naive-computation"></a>
-</h2>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
