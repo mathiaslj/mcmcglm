@@ -29,7 +29,7 @@ We can use the functions `compare_eta_comptime_across_nvars()` and `plot_eta_com
 The basic usage of the function can be used to investigate the computational gain for high dimensions of the CGGibbs sampler compared to the naive approach of doing $d$ computation for each coordinate update. For this purpose, the function call is:
 ```{r run-compare-nvars}
 res <- compare_eta_comptime_across_nvars(
-  n_vars = c(2, seq(from = 50, to = 600, by = 50)),
+  n_vars = c(2, seq(from = 50, to = 500, by = 50)),
   n_samples = 1,
   burnin = 0,
   w = 0.5)

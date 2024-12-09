@@ -12,6 +12,7 @@
 #' @importFrom stats is.empty.model
 #' @importFrom stats model.matrix
 #' @importFrom stats model.response
+#' @importFrom stats quantile
 #' @importFrom stats rnorm
 #' @importFrom stats setNames
 #' @importFrom stats time
